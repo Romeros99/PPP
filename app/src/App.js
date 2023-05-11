@@ -16,7 +16,7 @@ function App() {
   //}
 
   const fetchData = async () => {
-    const newData = await fetch('/api', {
+    const newData = await fetch('/api/bd/pendientes', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
