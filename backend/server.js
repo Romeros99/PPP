@@ -61,14 +61,13 @@ app.get('/api/bd/pendientes', async(req, res) => {
   res.send(result.recordset);
 });
 
-
-app.post('/api/bd/eliminar', async(req, res) => {
-  const result = await db_operation.crearAlumno(req.body);
+app.post('/api/bd/crear/alumno', async(req, res) => {
+  await db_operation.crearAlumno(req.body, res);
 })
 
-app.post('/api/bd/crear', async(req, res) => {
-  const result = await db_operation.crearAlumno(req.body);
-})
+//app.post('/api/bd/eliminar/alumno', async(req, res) => {
+//  const result = await db_operation.crearAlumno(req.body);
+//})
 
 app.get('/api/pdf/:filename', (req, res) => {
     const folderPath = path.join(__dirname, 'pdfs');
