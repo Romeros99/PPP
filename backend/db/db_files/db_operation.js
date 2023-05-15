@@ -1,38 +1,57 @@
 const config    = require('./db_config'),
       sql       = require('mssql')
 
-//const removeAlumnos = async(RUN_Alumno) => {
-//  try {
-//    let pool = await sql.connect(config);
-//    let alumnos = await pool.request()
-//    .query(`SELECT * FROM Alumnos 
-//            WHERE RUN_Alumno = '${run_alumno}'`);
-//    console.log(alumnos);
-//    return alumnos;
-//  }
-//  catch(error) {
-//    console.log(error);
-//  }
-//}
-
 const getAlumnosPendientes = async() => {
   try {
-    let pool = await sql.connect(config);
-    let alumnosPendientes = await pool.request()
+    const pool = await sql.connect(config);
+    const alumnosPendientes = await pool.request()
     .query(`SELECT A.* FROM Alumnos AS A 
             JOIN Reglamentos AS R ON A.RUN_Alumno = R.RUN_Alumno
             LEFT JOIN Detalle_Pasantia AS DP ON A.RUN_Alumno = DP.RUN_Alumno
-            WHERE R.Decision = 1 AND DP.RUN_Alumno IS NULL`);
-    console.log(alumnosPendientes);
+            WHERE DP.RUN_Alumno IS NULL`);
+
     return alumnosPendientes;
   }
   catch(error) {
     console.log(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
     return error;
   }
 }
 
+const removeAlumno = async(Alumno, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const deleteAlumno = await pool.request()
+    .query(`DELETE FROM Alumnos 
+            WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+    
+    res.status(201).json({ message: 'Alumno eliminado exitosamente.' });
+    return;
+  }
+  catch(error) {
+    console.log(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+}
 
+const removeReglamento = async(Alumno, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const deleteReglamento = await pool.request()
+    .query(`DELETE FROM Reglamentos
+            WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+    
+    res.status(201).json({ message: 'Reglamento eliminado exitosamente.' });
+    return;
+  }
+  catch(error) {
+    console.log(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+}
 
 const crearAlumno = async(Alumno, res) => {
   try {
@@ -42,9 +61,29 @@ const crearAlumno = async(Alumno, res) => {
       res.status(400).json({ error: 'ERROR: RUN inválido.' });
       return;
     }
-    
-    let pool = await sql.connect(config);
-    let result = await pool.request()
+
+    if (Alumno.Nombres.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese su nombre.' });
+      return;
+    }
+
+    if (Alumno.Apellidos.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese su apellido.' });
+      return;
+    }
+
+    if (Alumno.Mail_UAI.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese su mail universitario.' });
+      return;
+    }
+
+    if (Alumno.Mail_Personal.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese su mail personal.' });
+      return;
+    }
+
+    const pool = await sql.connect(config);
+    const result = await pool.request()
     .query(`SELECT * FROM Alumnos
             WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
     
@@ -61,13 +100,48 @@ const crearAlumno = async(Alumno, res) => {
   }
   catch(error) {
     console.error(error);
-    res.status(500).json({ error: 'ERROR: Error interno de servidor.' })
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+}
+
+const crearReglamento = async(Reglamento, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const insertReglamento = await pool.request().query(`INSERT INTO Reglamentos VALUES
+      ('${Reglamento.RUN_Alumno}', 1, convert(DATETIME, '${Reglamento.Fecha}'))`);
+    
+    res.status(201).json({ message: 'Reglamento aceptado.' });
     return;
+  }
+  catch(error) {
+    console.error(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' })
+    return error;
+  }
+}
+
+const crearPasantia = async(Alumno, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const insertPasantia = await pool.request().query(`INSERT INTO Detalle_Pasantia VALUES
+      ('${Alumno.RUN_Alumno}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)`);
+    
+    res.status(201).json({ message: 'Pasantía creada.' });
+    return;
+  }
+  catch(error) {
+    console.error(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' })
+    return error;
   }
 }
 
 module.exports = {
-  //getAlumnos,
   getAlumnosPendientes,
-  crearAlumno
+  crearAlumno,
+  crearReglamento,
+  crearPasantia,
+  removeAlumno,
+  removeReglamento
 }
