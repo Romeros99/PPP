@@ -1,22 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import Modal from 'react-modal';
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.css'
+import {Button, Modal, ModalHeader, ModalBody} from 'reactstrap'
+import './PDFModal.css';
 
-function PDFModal({ pdfUrl }) {
+function PDFModal({pdfUrl, Alumno}) {
   // Correos
-  const [error, setError] = useState(null);
-  const [sent, setSent] = useState(false);
-  const [comentarios, setComentarios] = useState('Ingrese su Comentario');
+  const [comentarios, setComentarios] = useState('');
   const [showModal, setShowModal] = useState(false);
-
+  const [alumno, setAlumno] = useState(Alumno);
+  
   const handleRechazar = () => {
     setShowModal(true);
   };
 
-  const enviarCorreo = () => {
-    let to = 'fernandogonz2015@icloud.com'; //Sacar de la base de datos para cada alumno
+  const sendDataAlumno = async () => {
+    try {
+      const respuesta = await fetch('/api/bd/eliminar/alumno', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          RUN_Alumno: alumno.RUN_Alumno,
+        })
+      })
+  
+      const data = await respuesta.json();
+      
+      if (data.error) {
+        alert(data.error);
+      } else {
+        alert("Alumno eliminado exitosamente!");
+      }
+    } catch (error) {
+      alert('ERROR: Error en la eliminación del alumno.')
+    }
+  }
+
+  const sendDataReglamento = async () => {
+    try {
+      const respuesta = await fetch('/api/bd/eliminar/reglamento', {
+       method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          RUN_Alumno: alumno.RUN_Alumno,
+        })
+      })
+  
+      await sendDataAlumno();
+    } catch (error) {
+      alert('ERROR: Error en la eliminación del alumno.')
+    }
+  }
+
+  const sendDataPasantia = async () => {
+    try {
+      const respuesta = await fetch('/api/bd/crear/pasantia', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          RUN_Alumno: alumno.RUN_Alumno,
+        })
+      })
+      
+      const data = await respuesta.json();
+      
+      if (data.error) {
+        alert(data.error);
+      } else {
+        alert('Pasantía creada!')
+      }
+    } catch (error){
+      alert('ERROR: Error en la aceptación del reglamento.')
+    }
+  }
+
+  const enviarCorreo = async () => {
+    let to = alumno.Mail_UAI; //Sacar de la base de datos para cada alumno
     const subject = 'Notificacion Pasantias UAI';
     const text = 'Se han aceptado sus requisitos de pasantia'
-    const html = '<p>Se han aceptado sus requisitos de pasantía</p>'
+    const html = `<p>Estimado ${alumno.Nombres + ' ' + alumno.Apellidos},</p>
+                  <div>
+                    <p>Junto con saludarlo, le informamos que se ha aceptado su solicitud para iniciar su track de titulación por medio de pasantía. Por favor, ingrese los datos de la empresa en el Paso 2 que estará habilitado en su cuenta de Pasantías Paso a Paso.</p>
+                    <p>Cualquier consulta, no dude contactornos por medio del siguiente correo pasantiasppuai@gmail.com</p>
+                  </div>
+                  <p>Atentamente,</p>
+                  <div>
+                    <p>Coordinación de Prácticas y Pasantías UAI.</p>
+                  </div>`
 
     fetch('/api/mail/send-email', {
       method: 'POST',
@@ -33,19 +111,33 @@ function PDFModal({ pdfUrl }) {
       .catch(error => {
         console.error(error);
       });
+    
+    alert('Se notificará al alumno la aceptacion de requisitos');
+    sendDataPasantia();
   };
 
-  const handleEnviarComentarios = () => {
+  const handleEnviarComentarios = async () => {
     // Aquí puedes enviar los comentarios por correo electrónico utilizando la API de SendGrid
     if (comentarios.trim() === '') {
       alert('El comentario no puede estar vacío');
       return;
     }
     
-    const to = 'fernandogonz2015@icloud.com'; //Notificar al alumno
+    const to = alumno.Mail_UAI; //Notificar al alumno
     const subject = 'Notificacion Pasantias UAI';
     const text = 'Requisitos rechazados'
-    const html = `<p>Se han rechazado sus requisitos por la siguiente razón:: ${comentarios}</p>`
+    const html = `<p>Estimado ${alumno.Nombres + ' ' + alumno.Apellidos},</p>
+                  <div>
+                    <p>Junto con saludarlo, le informamos que se ha rechazado su solicitud para iniciar su track de titulación por medio de pasantía por la siguiente razón:</p>
+                    <div>
+                      <p>${comentarios}</p>
+                    </div>
+                    <p>Cualquier consulta, por favor contactornos por medio del siguiente correo pasantiasppuai@gmail.com</p>
+                  </div>
+                  <p>Atentamente,</p>
+                  <div>
+                    <p>Coordinación de Prácticas y Pasantías UAI.</p>
+                  </div>`
   
     fetch('api/mail/send-email', {
       method: 'POST',
@@ -62,46 +154,36 @@ function PDFModal({ pdfUrl }) {
     .catch(error => {
       console.error(error);
     });
-
-
     // Después de enviar los comentarios, cierra la caja de comentarios
+    alert("Se notificará al alumno la razon de rechazo")
     setShowModal(false);
+    sendDataReglamento();
   };
 
-  //PDF
-
-  const [modalAccepted, setModalAccepted] = useState(false);
-//"window.opener.setModalAccepted(true); window.close()"
-//"window.close()"
-  useEffect(() => {
-    if (pdfUrl) {
-      const popupWindow = window.open('', '_blank', 'width=600,height=800');
-      const content = `
-        <html>
-          <body>
-            <iframe src="${pdfUrl}" width="100%" height="700"></iframe>
-            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-              <button onClick= ${enviarCorreo()} ${"window.opener.setModalAccepted(true); window.close()"}>Aceptar</button> 
-              <button onClick= ${handleRechazar()} ${"window.close()"}>Rechazar</button>
-            </div>
-            <Modal isOpen=${showModal}>
-              <h2>Comentarios</h2>
-              <textarea value=${comentarios} onChange=${(e) => setComentarios(e.target.value)} />
-              <button onClick=${handleEnviarComentarios()}>Enviar</button>
-              <button onClick=${setShowModal(false)}>Cancelar</button>
-            </Modal>
-          </body>
-        </html>`;
-      popupWindow.document.open();
-      popupWindow.document.write(content);
-      popupWindow.document.close();
-    }
-  }, [pdfUrl]);
-
   return (
-    <div>
-      {modalAccepted && <p>¡Modal aceptado!</p>}
+    <div className='center'>     
+      <h1>Confirmación de requisitos</h1>
+      <embed className='pdf' src= {pdfUrl} width="800" height="575" type='application/pdf' />
+
+      <div className='botones'>
+      <Button className='boton-aceptar' onClick={enviarCorreo}>Aceptar</Button>
+      <Button className='boton-rechazar' onClick={handleRechazar}>Rechazar</Button>
+      </div>
+
+      <Modal isOpen={showModal}>
+        <ModalHeader>
+        <h2>Comentarios</h2>
+        </ModalHeader>
+        <ModalBody>
+        <textarea className="comentarios-textarea" value={comentarios} onChange={(e) => setComentarios(e.target.value)} />
+        </ModalBody>
+        <div className='boton-comentario' style={{ display: "flex", justifyContent: "center" , marginBottom:"20px"}}>
+        <Button className='boton-enviar' onClick={handleEnviarComentarios} style={{marginRight: "40px"}}>Enviar</Button>
+        <Button onClick={() => setShowModal(false)}>Cancelar</Button>
+        </div>
+      </Modal>
     </div>
+    
   );
 }
 

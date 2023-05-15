@@ -23,16 +23,6 @@
     width: 80%;
   }
   
-  .botones button {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    margin: 20px ;
-    margin-left: 20px ;
-    margin-right: 20px ;
-    margin-bottom: 20px ;
-  }
-  
   nav {
     display: flex;
     justify-content: space-between;
@@ -72,4 +62,21 @@
     border: none;
   }
 
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+  }
+  
+  .accept-button {
+    margin-right: 20px;
+    
+    background-color: rgb(0, 145, 255);
+  }

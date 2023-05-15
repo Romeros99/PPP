@@ -1,7 +1,38 @@
 .App {
-    height: 100vh;
-    display: grid;
-    justify-content: center;
-    align-content: center;
-    text-align: center;
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+}
+
+.navbar a {
+  color: white;
+}
+
+.navheader {
+  color: white;
+  font-size: 25px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+
+
+.navbar li a {
+display: inline-block;
+padding: 10px;
+
+color: white
+;
+text-decoration: none;
+}
+
+.navbar li a:hover {
+border-color: white; /* Agrega un borde blanco cuando el cursor pasa sobre el botón */
+}
+
+.navbar-logo {
+  height: 2rem;
+  margin-right: 1rem;
 }
