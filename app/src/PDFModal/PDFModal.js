@@ -4,15 +4,16 @@ import {Button, Modal, ModalHeader, ModalBody} from 'reactstrap'
 import './PDFModal.css';
 
 function PDFModal({pdfUrl, Alumno}) {
-  // Correos
+   //define constantes con sus metodos set 
   const [comentarios, setComentarios] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [alumno, setAlumno] = useState(Alumno);
-  
+  //funcion que cierra el modal
   const handleRechazar = () => {
     setShowModal(true);
   };
-
+ 
+  //envia una solicitud post para eliminar alumno de la based de datos
   const sendDataAlumno = async () => {
     try {
       const respuesta = await fetch('/api/bd/eliminar/alumno', {
@@ -38,6 +39,7 @@ function PDFModal({pdfUrl, Alumno}) {
     }
   }
 
+//envia realiza una solicitud post para eliminar registro de un reglamento de la base de datos
   const sendDataReglamento = async () => {
     try {
       const respuesta = await fetch('/api/bd/eliminar/reglamento', {
@@ -57,6 +59,7 @@ function PDFModal({pdfUrl, Alumno}) {
     }
   }
 
+//envia  solicitud  post para crear una pasantia en la base de datos
   const sendDataPasantia = async () => {
     try {
       const respuesta = await fetch('/api/bd/crear/pasantia', {
@@ -82,7 +85,8 @@ function PDFModal({pdfUrl, Alumno}) {
     }
   }
 
-  const enviarCorreo = async () => {
+  //crea el correo electronico y lo envia por solicitud post para realizar el envio.
+  const sendMail = async () => {
     let to = alumno.Mail_UAI; //Sacar de la base de datos para cada alumno
     const subject = 'Notificacion Pasantias UAI';
     const text = 'Se han aceptado sus requisitos de pasantia'
@@ -116,7 +120,8 @@ function PDFModal({pdfUrl, Alumno}) {
     sendDataPasantia();
   };
 
-  const handleEnviarComentarios = async () => {
+  //escribe y envia solicitud post para enviar el correo electronico con los comentarios en caso de ser rechazado
+  const handleSendComments = async () => {
     // Aquí puedes enviar los comentarios por correo electrónico utilizando la API de SendGrid
     if (comentarios.trim() === '') {
       alert('El comentario no puede estar vacío');
@@ -160,13 +165,14 @@ function PDFModal({pdfUrl, Alumno}) {
     sendDataReglamento();
   };
 
+  //visualizacion de pdf con botones de aceptar, rechazar y modal de comentarios
   return (
     <div className='center'>     
       <h1>Confirmación de requisitos</h1>
       <embed className='pdf' src= {pdfUrl} width="800" height="575" type='application/pdf' />
 
       <div className='botones'>
-      <Button className='boton-aceptar' onClick={enviarCorreo}>Aceptar</Button>
+      <Button className='boton-aceptar' onClick={sendMail}>Aceptar</Button>
       <Button className='boton-rechazar' onClick={handleRechazar}>Rechazar</Button>
       </div>
 
@@ -178,7 +184,7 @@ function PDFModal({pdfUrl, Alumno}) {
         <textarea className="comentarios-textarea" value={comentarios} onChange={(e) => setComentarios(e.target.value)} />
         </ModalBody>
         <div className='boton-comentario' style={{ display: "flex", justifyContent: "center" , marginBottom:"20px"}}>
-        <Button className='boton-enviar' onClick={handleEnviarComentarios} style={{marginRight: "40px"}}>Enviar</Button>
+        <Button className='boton-enviar' onClick={handleSendComments} style={{marginRight: "40px"}}>Enviar</Button>
         <Button onClick={() => setShowModal(false)}>Cancelar</Button>
         </div>
       </Modal>
