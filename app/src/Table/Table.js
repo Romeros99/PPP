@@ -1,18 +1,21 @@
+//importacion de librerias
 import React, {useState} from 'react';
 import './Table.css';
 import PDFModal from '../PDFModal/PDFModal.js'
 import Modal from 'react-modal';
 import { Button, ModalBody } from 'reactstrap';
 
+//crea un tabla con las filas de la base de dato y largo dinamico segun los registros de alumnos
 const Table = ({theadData, tbodyData}) => {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [alumno, setAlumno] = useState({RUN_Alumno: '', Nombres: '', Apellidos: '', Mail_UAI: '', Mail_Personal: ''});
-  
+
+  //Cierra el modal
   const closeModal  = () =>{
     setShowModal(false);
   }
-  
+  //Posicion modal
   const modalStyles = {
     position: "absolute",
     top: "50%",
@@ -20,6 +23,7 @@ const Table = ({theadData, tbodyData}) => {
     transform:'translate (-50%, -50%)'
   }
 
+  //Al apretar la fila del alumno, desplega el PDF de su estado académico
   const funcClick = (row) => {
     fetch(`/api/pdf/${row.RUN_Alumno}.pdf`).then(response => response.blob())
     .then(blob => {
@@ -33,7 +37,7 @@ const Table = ({theadData, tbodyData}) => {
                 'Mail_UAI': row.Mail_UAI,
                 'Mail_Personal': row.Mail_Personal})
   }
-
+  //Despliega la tabla y abre el modal cuando se apreta un alumno
   return (
     <div>
       <table>
