@@ -1,3 +1,4 @@
+//Información para establecer la conección con la Base de Datos en el Servidor SQLExpress
 const config = {
   user: "FedeGomez",
   password: "foo",
