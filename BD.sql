@@ -1,3 +1,4 @@
+--Creación de las tablas
 CREATE TABLE Alumnos(
     RUN_Alumno VARCHAR(12) NOT NULL,
     Nombres VARCHAR(64),
@@ -62,6 +63,7 @@ CREATE TABLE Detalle_Pasantia(
     PRIMARY KEY (ID_Pasantia)
 );
 
+--Inserción de primeros registros de prueba
 INSERT INTO Alumnos(RUN_Alumno, Nombres, Apellidos, Mail_UAI, Mail_Personal)
 VALUES
     ('19.248.635-1', 'Juan Luis', 'Perez Rodríguez', 'juanluperez@alumnos.uai.cl', 'jlprodriguez@gmail.com'),
