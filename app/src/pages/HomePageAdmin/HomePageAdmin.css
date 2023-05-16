@@ -92,3 +92,11 @@ nav button:hover {
 iframe {
   border: none;
 }
+
+.button {
+  display: flex;
+  justify-content: center;
+  margin: 20px ;
+  background-color: rgb(0, 145, 255);
+
+}

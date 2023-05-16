@@ -3,7 +3,6 @@ const express       = require('express'),
       path          = require('path'),
       bodyParser    = require('body-parser'),
       db_operation  = require('./db/db_files/db_operation.js'),
-      clases        = require('./db/db_files/db_clases.js'),
       sgMail        = require('@sendgrid/mail');
       
 const API_PORT = process.env.PORT || 5000;
@@ -63,21 +62,28 @@ app.get('/api/bd/pendientes', async(req, res) => {
 
 app.post('/api/bd/crear/alumno', async(req, res) => {
   await db_operation.crearAlumno(req.body, res);
-})
+});
 
-//app.post('/api/bd/eliminar/alumno', async(req, res) => {
-//  const result = await db_operation.crearAlumno(req.body);
-//})
+app.post('/api/bd/crear/reglamento', async(req, res) => {
+  await db_operation.crearReglamento(req.body, res);
+});
+
+app.post('/api/bd/crear/pasantia', async(req, res) => {
+  await db_operation.crearPasantia(req.body, res);
+});
+
+app.post('/api/bd/eliminar/alumno', async(req, res) => {
+  await db_operation.removeAlumno(req.body, res);
+});
+
+app.post('/api/bd/eliminar/reglamento', async(req, res) => {
+  await db_operation.removeReglamento(req.body, res);
+});
 
 app.get('/api/pdf/:filename', (req, res) => {
     const folderPath = path.join(__dirname, 'pdfs');
     const filePath = path.join(folderPath, req.params.filename);
     res.sendFile(filePath);
 });
-
-//let NicolasGomez = new Alumno("19.436.418-9", "Nicolas Adolfo", "Gomez Marchesse", "nicogomez@alumnos.uai.cl", "nicogomezmarchesse@gmail.com");
-//db_operation.crearAlumno(NicolasGomez);
-
-//db_operation.getAlumnos('20.358.429-6')
 
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));

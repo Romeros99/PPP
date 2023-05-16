@@ -1,3 +1,4 @@
+// Clases para generar registros en BD
 class Alumno{
   constructor(RUN_Alumno, Nombres, Apellidos, Mail_UAI, Mail_Personal){
     this.RUN_Alumno = RUN_Alumno;
