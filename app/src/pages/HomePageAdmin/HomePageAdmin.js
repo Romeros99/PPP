@@ -21,7 +21,7 @@ function HomePageAdmin() {
     setReturnedData([...newData]);
   }
 
-  //
+  //obtiene nombres de las columnas de table.js
   const getHeadings = (returnedData) => {
     return Object.keys(returnedData[0]);
   }
