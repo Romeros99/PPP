@@ -3,113 +3,119 @@ import React, {useState} from 'react';
 import {Button, Modal, ModalHeader, ModalBody} from 'reactstrap';
 
 function Formulario() {
-    const [alumno, setAlumno] = useState({RUN_Alumno: '', Nombres: '', Apellidos: '', Mail_UAI: '', Mail_Personal: ''});
-    const [reglamento, setReglamento] = useState({RUN_Alumno: '', Fecha: getCurrentDateString()});
-    const [showModal, setShowModal] = useState(false);
-  
-    const setInput = (e) => {
-      const {name, value} = e.target;
-      setAlumno(prevState => ({
-        ...prevState,
-        [name]: value
-      }));
-      if (name === 'RUN_Alumno') {
-        setReglamento(prevState => ({
-          ...prevState,
-          [name]:value
-        }));
-      }
-    }
-  
-    const entregarDataAlumno = async () => {
-      try {
-        const respuesta = await fetch('/api/bd/crear/alumno', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            RUN_Alumno: alumno.RUN_Alumno,
-            Nombres: alumno.Nombres,
-            Apellidos: alumno.Apellidos,
-            Mail_UAI: alumno.Mail_UAI,
-            Mail_Personal: alumno.Mail_Personal
-          })
-        })
-        
-        const data = await respuesta.json();
-        
-        if (data.error) {
-          alert(data.error);
-        } else {
-          entregarDataReglamento();
-        }
-      } catch (error){
-        alert('ERROR: Error en el intento de creación de alumno.')
-      }
-    };
-  
-    const entregarDataReglamento = async () => {
-      try {
-        const respuesta = await fetch('/api/bd/crear/reglamento', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            RUN_Alumno: reglamento.RUN_Alumno,
-            Fecha: reglamento.Fecha
-          })
-        })
-        
-        const data = await respuesta.json();
-        
-        if (data.error) {
-          alert(data.error);
-        } else {
-          alert('Reglamento aceptado!')
-        }
-      } catch (error){
-        alert('ERROR: Error en la aceptación del reglamento.')
-      }
-    }
-  
-    function convertNumberFormat(num) {
-      if (num < 10){
-        return ('0' + num.toString());
-      }
-      else{
-        return (num.toString());
-      }
-    }
-  
-    function getCurrentDateString() {
-      const day = new Date().getDate() //current date
-      const month = new Date().getMonth() + 1 //current month
-      const year = new Date().getFullYear() //current year
-      const hours = new Date().getHours() //current hours
-      const min = new Date().getMinutes() //current minutes
-      const sec = new Date().getSeconds() //current seconds
-      return (year.toString() + '-' + convertNumberFormat(month) + '-' + convertNumberFormat(day) + ' ' +  convertNumberFormat(hours) + ':' + convertNumberFormat(min) + ':' + convertNumberFormat(sec))
-    }
-  
-    const funcConfirmado = () => {
+  //Definición de constantes en donde se almacenará el alumno, el reglamento y si se debe o no mostrar el modal.
+  const [alumno, setAlumno] = useState({RUN_Alumno: '', Nombres: '', Apellidos: '', Mail_UAI: '', Mail_Personal: ''});
+  const [reglamento, setReglamento] = useState({RUN_Alumno: '', Fecha: getCurrentDateString()});
+  const [showModal, setShowModal] = useState(false);
+
+  //Función en donde se irá cambiando las propiedades del alumno y del reglamento dependiendo de lo que se ingrese en el formulario.
+  const setInput = (e) => {
+    const {name, value} = e.target;
+    setAlumno(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+    if (name === 'RUN_Alumno') {
       setReglamento(prevState => ({
         ...prevState,
-        ['Fecha']: getCurrentDateString()
+        [name]:value
       }));
-      console.log(reglamento.Fecha);
-      entregarDataAlumno();
-      setShowModal(false);
     }
-     
-  const onSubmit = (event) => {
-    event.preventDefault();
-    entregarDataAlumno();
+  }
+  
+  //Request tipo POST para enviar la información de un alumno y crear su registro en la tabla Alumnos de la base de datos.
+  const entregarDataAlumno = async () => {
+    try {
+      const respuesta = await fetch('/api/bd/crear/alumno', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          RUN_Alumno: alumno.RUN_Alumno,
+          Nombres: alumno.Nombres,
+          Apellidos: alumno.Apellidos,
+          Mail_UAI: alumno.Mail_UAI,
+          Mail_Personal: alumno.Mail_Personal
+        })
+      })
+        
+      const data = await respuesta.json();
+      
+      if (data.error) {
+        alert(data.error);
+      } else {
+        //Si no hay error en la creación del alumno, se llama a la función para crear el registro del reglamento
+        entregarDataReglamento();
+      }
+    } catch (error){
+      alert('ERROR: Error en el intento de creación de alumno.')
+    }
   };
- 
+  
+  //Función tipo POST para agregar un registro al la tabla de Reglamentos del backend
+  const entregarDataReglamento = async () => {
+    try {
+      const respuesta = await fetch('/api/bd/crear/reglamento', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          RUN_Alumno: reglamento.RUN_Alumno,
+          Fecha: reglamento.Fecha
+        })
+      })
+      
+      const data = await respuesta.json();
+      
+      if (data.error) {
+        alert(data.error);
+      } else {
+        alert('Reglamento aceptado!')
+      }
+    } catch (error){
+      alert('ERROR: Error en la aceptación del reglamento.')
+    }
+  }
+
+  //Función para convertir un número en String y, en caso de tener un dígito (X), pasarlo al formato "0X" - Sirve para estandarizar el formato de DateTime.
+  function convertNumberFormat(num) {
+    if (num < 10){
+      return ('0' + num.toString());
+    }
+    else{
+      return (num.toString());
+    }
+  }
+  
+  //Genera un registro de el DateTime actual en formato "YYYY-MM-DD HH:mm:ss".
+  function getCurrentDateString() {
+    const day = new Date().getDate()
+    const month = new Date().getMonth() + 1
+    const year = new Date().getFullYear()
+    const hours = new Date().getHours()
+    const min = new Date().getMinutes()
+    const sec = new Date().getSeconds()
+    return (year.toString() + '-' + convertNumberFormat(month) + '-' + convertNumberFormat(day) + ' ' +  convertNumberFormat(hours) + ':' + convertNumberFormat(min) + ':' + convertNumberFormat(sec))
+  }
+  
+  //Ejecuta todos los comandos que se deben ejecutar al momento de confirmar el reglamento
+  const funcConfirmado = () => {
+    //Almacenar la hora en que se aceptó
+    setReglamento(prevState => ({
+      ...prevState,
+      ['Fecha']: getCurrentDateString()
+    }));
+    //Crear al alumno y al registro de reglamento en la BD.
+    entregarDataAlumno();
+    //Cerrar el modal.
+    setShowModal(false);
+  }
+  
+  //Se retorna el código HTML del Formulario que recibe la información del Alumno y genera sus registros en caso de aceptar el reglamento.
   return (
     <div className="center">
         <h1>Confirmación de reglamento</h1>
@@ -125,7 +131,7 @@ function Formulario() {
                 <h2>Ingrese sus datos</h2>
             </ModalHeader>
         <ModalBody>
-            <Form onSubmit={onSubmit}>
+            <Form>
             <Form.Group controlId='RUN_Alumno'>
                 <Form.Label>RUN del alumno</Form.Label>
                 <Form.Control
