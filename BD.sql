@@ -13,8 +13,7 @@ CREATE TABLE Reglamentos(
     RUN_Alumno VARCHAR(12),
     ID_Version TINYINT,
     Fecha DATETIME,
-    PRIMARY KEY (ID_Reglamento),
-    FOREIGN KEY (RUN_Alumno) REFERENCES Alumnos(RUN_Alumno)
+    PRIMARY KEY (ID_Reglamento)
 );
 
 CREATE TABLE Empresas(
