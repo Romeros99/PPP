@@ -26,7 +26,7 @@ function Formulario() {
   //Request tipo POST para enviar la información de un alumno y crear su registro en la tabla Alumnos de la base de datos.
   const entregarDataAlumno = async () => {
     try {
-      const respuesta = await fetch('/api/bd/crear/alumno', {
+      const respuesta = await fetch('/omega/bd/crear/alumno', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ function Formulario() {
   return (
     <div className="center">
         <h1>Confirmación de reglamento</h1>
-        <embed src= "http://localhost:5000/api/pdf/DECRETO ACADEMICO REGLAMENTO FIC PRACTICA.pdf" width="800" height="575" type='application/pdf'/>
+        <embed src= "http://localhost:4000/omega/pdf/DECRETO ACADEMICO REGLAMENTO FIC PRACTICA.pdf" width="800" height="575" type='application/pdf'/>
     
         <div className="button-container">
             <Button className="accept-button" onClick={() => setShowModal(true)}>Aceptar</Button>
