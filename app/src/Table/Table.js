@@ -25,7 +25,7 @@ const Table = ({theadData, tbodyData}) => {
 
   //Al apretar la fila del alumno, desplega el PDF de su estado académico
   const funcClick = (row) => {
-    fetch(`/api/pdf/${row.RUN_Alumno}.pdf`).then(response => response.blob())
+    fetch(`/omega/pdf/${row.RUN_Alumno}.pdf`).then(response => response.blob())
     .then(blob => {
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
