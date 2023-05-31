@@ -16,7 +16,7 @@ function PDFModal({pdfUrl, Alumno}) {
   //envia una solicitud post para eliminar alumno de la based de datos
   const sendDataAlumno = async () => {
     try {
-      const respuesta = await fetch('/api/bd/eliminar/alumno', {
+      const respuesta = await fetch('/omega/bd/eliminar/alumno', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ function PDFModal({pdfUrl, Alumno}) {
                     <div>
                       <p>${comentarios}</p>
                     </div>
-                    <p>Cualquier consulta, por favor contactornos por medio del siguiente correo pasantiasppuai@gmail.com</p>
+                    <p>Cualquier consulta, por favor contactarse por medio del siguiente correo pasantiasppuai@gmail.com</p>
                   </div>
                   <p>Atentamente,</p>
                   <div>
