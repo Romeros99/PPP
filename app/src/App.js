@@ -3,8 +3,9 @@ import React from 'react';
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 
 //Importa las paginas de alumno y administrador
-import HomePageAlumno from "./Pages/HomePageAlumno/HomePageAlumno";
-import HomePageAdmin from "./Pages/HomePageAdmin/HomePageAdmin";
+import HomePageAlumno from "./pages/HomePageAlumno/HomePageAlumno";
+import HomePageAdmin from "./pages/HomePageAdmin/HomePageAdmin";
+import LoginPage from './pages/LoginPage/LoginPage';
 
 //Función principal
 function App() {
@@ -22,6 +23,7 @@ function App() {
         </ul>
       </nav>
       <Routes>
+        <Route exact path="/login" element={<LoginPage />} />
         <Route exact path="/" element={<HomePageAlumno />} />
         <Route path="/about" element={<HomePageAdmin />} />
       </Routes>
