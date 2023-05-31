@@ -119,7 +119,7 @@ function Formulario() {
   return (
     <div className="center">
         <h1>Confirmación de reglamento</h1>
-        <embed src= "http://localhost:5000/api/pdf/DECRETO ACADEMICO REGLAMENTO FIC PRACTICA.pdf" width="800" height="575" type='application/pdf'/>
+        <embed src= "http://localhost:5000/api/pdf/DECRETO ACADEMICO REGLAMENTO FIC PRACTICA.pdf" width="800" height="875" type='application/pdf'/>
     
         <div className="button-container">
             <Button className="accept-button" onClick={() => setShowModal(true)}>Aceptar</Button>
