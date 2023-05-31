@@ -21,6 +21,7 @@ CREATE TABLE Administradores(
 --Inserción de primeros registros de prueba
 INSERT INTO Alumnos(RUN_Alumno, Nombres, Apellidos, Mail_UAI, Mail_Personal, Clave)
 VALUES
+    ('19.436.418-0', 'Nicolás Adolfo', 'Gómez Marchesse', 'nicogomezm@alumnos.uai.com', 'nicogomezm@gmail.com', 'elnico1'),
     ('19.248.635-1', 'Juan Luis', 'Perez Rodríguez', 'juanluperez@alumnos.uai.cl', 'jlprodriguez@gmail.com', 'KrooamLPA'),
     ('20.648.241-4', 'Santiago', 'Silva Lopez', 'santiasilva@alumnos.uai.cl', 'santisilva123@hotmail.com', 'Clave2'),
     ('20.358.429-6', 'Federico Andrés', 'Gómez Marchesse', 'fedgomez@alumnos.uai.cl', 'federicogomez99@gmail.com', 'EstaClaveNadieLaAdivina');
