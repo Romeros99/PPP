@@ -1,11 +1,11 @@
 Para la correcta ejecución de la aplicación, es necesario instalar las siguientes dependencias:
 Dentro de ./app:
 
-npm i react nodemon react-bootstrap reactstrap bootstrap react-router-dom
+npm i react nodemon react-bootstrap reactstrap bootstrap react-router-dom eslint
 
 Dentro de ./backend:
 
-npm i @sendgrid/mail body-parser cors express mssql nodemon path
+npm i @sendgrid/mail body-parser cors express mssql nodemon
 
 Dentro de ./omega:
 
@@ -24,6 +24,10 @@ options:
 instancename: "SQLEXPRESS"
 
 port: 
+
+Lo mismo se debe hacer para el servidor de bases de datos SQL con la información del archivo ./omega/db_omega/db_config.js
+
+Los modelos físicos para crear cada base de datos en los motores de bases de datos (SQL Server) son los archivos BD_App.sql para la base de datos Pasantia Paso a Paso y BD_Omega.sql para la base de datos Omega.
 
 Finalmente, para inicar la aplicación, se debe ejecutar el siguiente código en un terminal dentro de ./app
 
