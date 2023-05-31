@@ -1,14 +1,26 @@
 import './HomePageAdmin.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from '../../Table/Table.js'
-import { Button, ModalBody } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 function HomePageAdmin() {
   //Se utiliza useState para almacenar en un array los alumnos que están en estado pendiente
+  const [returnedRUNs, setReturnedRUNs] = useState(['']);
   const [returnedData, setReturnedData] = useState(['']);
+
+  useEffect(() => {
+    fetchRUNs();
+  }, []);
   
-  //Función que conecta con el API para obtener los alumnos en estado pendiente mediante un GET Request.
-  const fetchData = async () => {
+  useEffect(() => {}, [returnedData]);
+
+  //obtiene nombres de las columnas de table.js
+  const getHeadings = (returnedData) => {
+    return Object.keys(returnedData[0]);
+  }
+
+  //Función que conecta con el API para obtener los RUNs de alumnos en estado pendiente mediante un GET Request.
+  const fetchRUNs = async () => {
     const newData = await fetch('/api/bd/pendientes', {
       method: 'GET',
       headers: {
@@ -17,18 +29,43 @@ function HomePageAdmin() {
       }
     })
     .then(res => res.json());
-    //Se almacenan todos los alumnos retornados (json) en un returnedData 
-    setReturnedData([...newData]);
+    //Se almacenan todos los RUNs retornados (json) en un returnedRUNs 
+    setReturnedRUNs([...newData]);
   }
 
-  //obtiene nombres de las columnas de table.js
-  const getHeadings = (returnedData) => {
-    return Object.keys(returnedData[0]);
+  //Función que conecta con Omega para obtener la información de alumnos en estado pendiente mediante un GET Request.
+  const fetchData = async () => {
+    try {
+      const res = await fetch('/omega/bd/pendientes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify( [ ...returnedRUNs ] )
+      })
+        
+      const data = await res.json();
+      
+      if (data.error) {
+        alert(data.error);
+      } else {
+      //Se almacenan toda la información de los alumnos retornados (json) en un returnedData 
+        setReturnedData([...data]);
+      }
+    } catch (error){
+      alert('ERROR: Error en la búsqueda de alumnos pendientes.')
+    }
+  };
+
+  const funcFetchData = () => {
+    fetchRUNs();
+    fetchData();
   }
 
   return (
     <div className = 'App'>
-      <Button onClick = {() => fetchData()}>Buscar Alumnos Pendientes</Button>
+      <Button onClick = {() => funcFetchData()}>Buscar Alumnos Pendientes</Button>
       <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>
     </div>
   )
