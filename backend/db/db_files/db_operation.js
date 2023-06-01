@@ -14,7 +14,6 @@ const getRUNsPendientes = async() => {
   }
   catch(error) {
     console.log(error);
-    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
     return error;
   }
 }
@@ -48,7 +47,7 @@ const crearReglamento = async(Reglamento, res) => {
     return;
   }
   catch(error) {
-    console.error(error);
+    console.log(error);
     res.status(500).json({ error: 'ERROR: Error interno de servidor.' })
     return error;
   }
@@ -60,13 +59,61 @@ const crearPasantia = async(Alumno, res) => {
     //Deja el resto de las calumnas en NULL ya que son la información que se debería registrar en el siguiente Paso de la aplicación.
     const pool = await sql.connect(config);
     const insertPasantia = await pool.request().query(`INSERT INTO Detalle_Pasantia VALUES
-      ('${Alumno.RUN_Alumno}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)`);
+      ('${Alumno.RUN_Alumno}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.0)`);
     
     res.status(201).json({ message: 'Pasantía creada.' });
     return;
   }
   catch(error) {
-    console.error(error);
+    console.log(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' })
+    return error;
+  }
+}
+
+//Función para obtener el paso actual del alumno, dado su rut
+const getPasoActual = async(Alumno, res) => {
+  try {
+    let paso_actual = 0;
+
+    //Se comienza verificando si el alumno tiene un detalle de pasantía creado, en caso de ser así, se devuelve el paso que está registrado en su detalle.
+    const pool = await sql.connect(config);
+    const tmp = await pool.request()
+    .query(`SELECT * FROM Detalle_Pasantia
+            WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+    
+    if (tmp.recordset.length > 0) {
+      paso_actual = await pool.request()
+      .query(`SELECT Paso_Actual FROM Detalle_Pasantia
+              WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+      
+      res.status(201).json({ message: 'Operación Exitosa.' });
+      return paso_actual;
+    }
+
+    else {
+      //Si no tiene detalle de pasantía creado, se verifica si el alumno firmó el reglamento, en caso de ser así, ya completó el paso 1 y debe esperar la aprobación del admin.
+      //Por lo tanto, se devuelve el paso 1.5
+      const tmp2 = await pool.request()
+      .query(`SELECT * FROM Reglamentos
+              WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+        
+      if (tmp2.recordset.length > 0){
+        paso_actual = 1.5;
+        res.status(201).json({ message: 'Operación Exitosa.' });
+        return paso_actual;
+      }
+      else {
+        //En caso de que no haya firmado el reglamento, se devuelve el paso 1.
+        paso_actual = 1;
+        res.status(201).json({ message: 'Operación Exitosa.' });
+        return paso_actual;
+      }
+    }
+    
+  }
+  catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'ERROR: Error interno de servidor.' })
     return error;
   }
@@ -76,5 +123,6 @@ module.exports = {
   getRUNsPendientes,
   crearReglamento,
   crearPasantia,
-  removeReglamento
+  removeReglamento,
+  getPasoActual
 }
