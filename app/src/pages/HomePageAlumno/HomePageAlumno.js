@@ -1,12 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import './HomePageAlumno.css';
 import Formulario from '../../Formulario/Formulario.js'
+import FormEmpresa from '../../FormEmpresa/FormEmpresa';
 import React, { useState } from 'react';
 import {Button} from 'reactstrap';
 import axios from 'axios';
 
 const HomePageAlumno = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [content, setContent] = useState('');
   const [showReglamento, setShowReglamento] = useState(true);
   const rut = '20.358.711-2';
@@ -53,7 +54,7 @@ const HomePageAlumno = () => {
         );
       case 2:
         return (
-          <p>hola</p>
+          <FormEmpresa/>
         )
     }
   };
