@@ -6,13 +6,33 @@ import './FormEmpresa.css';
 function FormEmpresa(){
     const [showForm, setShowForm] = useState(false);
     const [showBar, setShowBar] = useState(true);
-    const [empresa, setEmpresa] = useState({RUN_Empresas: '', Nombre: '', Calle_Direccion: '', Numero_Direccion: '', Comuna_Direccion: '', Ciudad_Direccion: '', Rubro: '', Estado_Convenio: ''});
+    const [empresa, setEmpresa] = useState({RUN_Empresas: '', Nombre: '', Calle_Direccion: '', Numero_Direccion: '', Comuna_Direccion: '', Ciudad_Direccion: '', Rubro: '', Estado_Convenio: 'Pendiente'});
     const [selectedEmpresa, setSelectedEmpresa] = useState('');
     const [returnedRUNs, setReturnedRUNs] = useState([]);
     const [isReadOnly, setIsReadOnly] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true);
     const [counter, setCounter] = useState(0);
     
+    useEffect(() => {
+        fetchRUNs();
+      }, []);
+      //busca todas las empresas en la base de datos
+      const fetchRUNs = async () => {
+        try {
+          const response = await fetch('/api/bd/empresas', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          });
+          const newData = await response.json();
+          setReturnedRUNs(newData);
+  
+        } catch (error) {
+          console.error('Error fetching RUNs:', error);
+        }
+      };
 
     //estilos
     const modalStyles = {
@@ -21,14 +41,29 @@ function FormEmpresa(){
         left: "40%",
         transform:'translate (-50%, -50%)'
       }
-      const ButtonStyles = {
-        position: "absolute",
-        top: "60%",
-        left: "50%",
-        transform:'translate (-50%, -50%)'
-      }
-    
+
     //Setea el formulario con los datos de la empresa que elige en el seleccionador
+    const handleEmpresaChange = (event) => {
+        const selectedValue = event.target.value;
+        try{
+            setIsDisabled(false)
+            const selectedEmpresa = returnedRUNs.find(empresa => empresa.RUN_Empresas === selectedValue);
+            
+            setEmpresa({
+                Nombre: selectedEmpresa.Nombre,
+                RUN_Empresas: selectedEmpresa.RUN_Empresas,
+                Ciudad_Direccion: selectedEmpresa.Ciudad_Direccion,
+                Comuna_Direccion: selectedEmpresa.Comuna_Direccion,
+                Calle_Direccion: selectedEmpresa.Calle_Direccion,
+                Numero_Direccion: selectedEmpresa.Numero_Direccion,
+                Rubro: selectedEmpresa.Rubro
+            });
+            setSelectedEmpresa(event.target.value);
+        }
+        catch (error){
+            setIsDisabled(true);
+        }
+    };
 
     //Abre el formulario
     const handleEnviarClick = () => {
@@ -86,16 +121,15 @@ function FormEmpresa(){
         if (counter % 2 === 0) {
             console.log("Acción A");
         } else {
-            entregarDataEmpresa()
+            entregarDataEmpresa();
             // Realiza la acción B
             console.log("Acción B");
         }
-        setCounter(counter + 1);
         };
 
     const handleAgregarEmpresa = () => {
         setCounter(1);
-        setEmpresa({RUN_Empresas: '', Nombre: '', Calle_Direccion: '', Numero_Direccion: '', Comuna_Direccion: '', Ciudad_Direccion: '', Rubro: '', Estado_Convenio: ''});
+        setEmpresa({RUN_Empresas: '', Nombre: '', Calle_Direccion: '', Numero_Direccion: '', Comuna_Direccion: '', Ciudad_Direccion: '', Rubro: '', Estado_Convenio: 'Pendiente'});
         setShowBar(false)
         setShowForm(true);
         setIsReadOnly(false);
@@ -109,7 +143,8 @@ function FormEmpresa(){
             Comuna_Direccion: '',
             Calle_Direccion: '',
             Numero_Direccion: '',
-            Rubro: ''
+            Rubro: '',
+            Estado_Convenio: 'Pendiente'
         });
         setShowBar(true);
         setShowForm(false);
