@@ -82,4 +82,9 @@ app.post('/api/bd/eliminar/reglamento', async(req, res) => {
   await db_operation.removeReglamento(req.body, res);
 });
 
+//request de crear empresa
+app.post('/api/bd/crear/empresa', async(req, res) => {
+  await db_operation.crearEmpresa(req.body, res);
+});
+
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));
