@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Button, Form, FormGroup, Label, Input, Row,Col } from 'reactstrap';
 import './FormEmpresa.css';
-
+import FormSupervisor from '../FormSupervisor/FormSupervisor';
 
 function FormEmpresa(){
     const [showForm, setShowForm] = useState(false);
@@ -12,6 +12,9 @@ function FormEmpresa(){
     const [isReadOnly, setIsReadOnly] = useState(false)
     const [isDisabled, setIsDisabled] = useState(true);
     const [counter, setCounter] = useState(0);
+    const [showButton, setShowButton] = useState(true);
+    const [isDone, setIsDone] = useState(false);
+    const [showFormSupervisor, setShowFormSupervisor] = useState(false);
     
     useEffect(() => {
         fetchRUNs();
@@ -93,11 +96,16 @@ function FormEmpresa(){
                 Estado_Convenio: 'Pendiente'})
             
             })
-        
             const data = await respuesta.json();
-      
+            
             if (data.error) {
               alert(data.error);
+            }
+            else{
+                setShowButton(!showButton);
+                setIsDone(true);
+                setIsReadOnly(true);
+                setShowFormSupervisor(true);
             }
         } catch (error){
             alert('ERROR: Error en el intento de creación de empresa.')
@@ -119,6 +127,9 @@ function FormEmpresa(){
     
     const handleClick = () => {
         if (counter % 2 === 0) {
+            setShowButton(!showButton);
+            setIsDone(true);
+            setShowFormSupervisor(true)
             console.log("Acción A");
         } else {
             entregarDataEmpresa();
@@ -146,11 +157,15 @@ function FormEmpresa(){
             Rubro: '',
             Estado_Convenio: 'Pendiente'
         });
+        setShowButton(true);
         setShowBar(true);
         setShowForm(false);
         setIsDisabled(true);
       };
-
+      const superAEmpresa = () => {
+        console.log('Acción realizada por superAEmpresa');
+        // Aquí puedes realizar cualquier acción adicional que necesites
+      };
     return(
         <div>
         <div>
@@ -174,9 +189,6 @@ function FormEmpresa(){
           <div>
             {showForm && (
             <div>
-                <Button onClick={handleGoBack}>
-                    &larr;
-                </Button>
                 <div>   
                 <Form style={modalStyles}>
                     <Row className="row-cols-lg-auto g-3 align-items-center">
@@ -293,7 +305,11 @@ function FormEmpresa(){
                         </Col>
                     </Row>
                     <br></br>
-                    <Button className='accept-button margin-left' onClick = {() => handleClick()}>Confirmar</Button>
+                    {showButton && <Button className='accept-button margin-left' onClick = {() => handleClick()}>Confirmar</Button>}
+                    {showButton &&<Button onClick={handleGoBack}>Volver</Button>}
+                    {isDone && (
+                        <FormSupervisor setShowButton={setShowButton} setShowForm={setShowForm} setShowFormSupervisor = {setShowFormSupervisor} showFormSupervisor = {showFormSupervisor}/>
+                    )}
                 </Form>
                 </div>
             </div>
