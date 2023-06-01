@@ -71,10 +71,25 @@ const crearPasantia = async(Alumno, res) => {
     return error;
   }
 }
+const getEmpresas = async() => {
+  try {
+    const pool = await sql.connect(config);
+    const RUNsEmpresas = await pool.request()
+    .query(`SELECT * FROM Empresas;`);
+
+    return RUNsEmpresas;
+  }
+  catch(error) {
+    console.log(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+}
 
 module.exports = {
   getRUNsPendientes,
   crearReglamento,
   crearPasantia,
-  removeReglamento
+  removeReglamento,
+  getEmpresas
 }
