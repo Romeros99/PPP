@@ -56,6 +56,11 @@ app.post('/api/mail/send-email', function(req, res) {
     });
 });
 
+//request de traer empresas
+app.get('/api/bd/empresas', async(req, res) => {
+  const result = await db_operation.getEmpresas();
+  res.send(result.recordset);
+});
 //request de traer RUNs de alumnos en estado pendiente
 app.get('/api/bd/pendientes', async(req, res) => {
   const result = await db_operation.getRUNsPendientes();
