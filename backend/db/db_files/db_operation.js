@@ -1,6 +1,7 @@
 const config    = require('./db_config'),
       sql       = require('mssql')
 
+
 //Función que retorna todos los alumnos que estén en estado Pendiente de Verificación de Requisitos (Aquellos que tengan un registro de su reglamento pero que todavía no tengan su registro de detalle pasantía).
 const getRUNsPendientes = async() => {
   try {
@@ -18,7 +19,7 @@ const getRUNsPendientes = async() => {
     return error;
   }
 }
-
+console.log(config);
 //Función para eliminar un registro de confirmación de reglamento utilizando el RUT del alumno como método de filtración.
 const removeReglamento = async(Alumno, res) => {
   try {
@@ -108,8 +109,8 @@ const crearEmpresa = async(Empresa, res) => {
       return;
     }
 
-    if (Empresa.Numero_Direccion.length === 0){
-      res.status(400).json({ error: 'ERROR: Por favor ingrese su numero.' });
+    if (isNaN(Empresa.Numero_Direccion)){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese un numero en el numero de la direccion.' });
       return;
     }
 
