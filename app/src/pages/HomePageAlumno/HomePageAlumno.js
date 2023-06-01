@@ -3,12 +3,38 @@ import './HomePageAlumno.css';
 import Formulario from '../../Formulario/Formulario.js'
 import React, { useState } from 'react';
 import {Button} from 'reactstrap';
+import axios from 'axios';
 
 const HomePageAlumno = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [content, setContent] = useState('');
+  const [showReglamento, setShowReglamento] = useState(true);
+  const rut = '20.358.711-2';
 
+  const checkRun = (e) => {
+    if (rut) {
+      axios
+        .get('/api/bd/pendientes')
+        .then((res) => {
+          let foundMatch = false;
+          res.data.forEach((row) => {
+            if (row.RUN_Alumno === rut) {
+              foundMatch = true;
+            }
+          });
+          setShowReglamento(!foundMatch);
+        })
+        .catch((err) => {
+          setShowReglamento(true);
+        });
+    }
+  }
+  
   const handleClick = (step) => {
+    if (step === 1){
+      console.log("prueba")
+      checkRun();
+    }
     if (step === currentStep) {
       // Realizar acciones correspondientes al paso actual
       console.log(`Paso ${step} seleccionado`);
@@ -18,11 +44,12 @@ const HomePageAlumno = () => {
       console.log(`No puedes seleccionar el Paso ${step} en este momento`);
     }
   };
+
   const generarContenido = (step) => {
     switch (step) {
       case 1:
         return (
-          <Formulario/>
+          <Formulario reglamento = {showReglamento}/>
         );
       case 2:
         return (
