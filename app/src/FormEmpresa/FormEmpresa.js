@@ -308,7 +308,7 @@ function FormEmpresa(){
                     {showButton && <Button className='accept-button margin-left' onClick = {() => handleClick()}>Confirmar</Button>}
                     {showButton &&<Button onClick={handleGoBack}>Volver</Button>}
                     {isDone && (
-                        <FormSupervisor setShowButton={setShowButton} setShowForm={setShowForm} setShowFormSupervisor = {setShowFormSupervisor} showFormSupervisor = {showFormSupervisor}/>
+                        <FormSupervisor setShowButton={setShowButton} setShowForm={setShowForm} setShowFormSupervisor = {setShowFormSupervisor} showFormSupervisor = {showFormSupervisor} empresa = {empresa}/>
                     )}
                 </Form>
                 </div>
