@@ -61,6 +61,7 @@ app.get('/api/bd/empresas', async(req, res) => {
   const result = await db_operation.getEmpresas();
   res.send(result.recordset);
 });
+
 //request de traer RUNs de alumnos en estado pendiente
 app.get('/api/bd/pendientes', async(req, res) => {
   const result = await db_operation.getRUNsPendientes();
@@ -69,8 +70,8 @@ app.get('/api/bd/pendientes', async(req, res) => {
 
 //request para llevar el paso actual del alumno al frontend 
 app.get('/api/bd/pasoactual', async(req, res) => {
-  const result = await db_operation.getPasoActual(req.body, res);
-  res.send(result.recordset);
+  const { RUN } = req.query;
+  await db_operation.getPasoActual(RUN, res);
 });
 
 //request de crear reglamento

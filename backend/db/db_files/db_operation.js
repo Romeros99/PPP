@@ -18,7 +18,7 @@ const getRUNsPendientes = async() => {
     return error;
   }
 }
-console.log(config);
+
 //Función para eliminar un registro de confirmación de reglamento utilizando el RUT del alumno como método de filtración.
 const removeReglamento = async(Alumno, res) => {
   try {
@@ -73,50 +73,42 @@ const crearPasantia = async(Alumno, res) => {
 }
 
 //Función para obtener el paso actual del alumno, dado su rut
-const getPasoActual = async(Alumno, res) => {
+const getPasoActual = async(RUN, res) => {
   try {
-    let paso_actual = 0;
-
+    let step = 0;
     //Se comienza verificando si el alumno tiene un detalle de pasantía creado, en caso de ser así, se devuelve el paso que está registrado en su detalle.
     const pool = await sql.connect(config);
     const tmp = await pool.request()
     .query(`SELECT * FROM Detalle_Pasantia
-            WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+            WHERE RUN_Alumno = '${RUN}'`);
     
     if (tmp.recordset.length > 0) {
-      paso_actual = await pool.request()
+      const resultado = await pool.request()
       .query(`SELECT Paso_Actual FROM Detalle_Pasantia
-              WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
-      
-      res.status(201).json({ message: 'Operación Exitosa.' });
-      return paso_actual;
+              WHERE RUN_Alumno = '${RUN}'`);
+      step = resultado.recordset[0].Paso_Actual;
     }
-
     else {
       //Si no tiene detalle de pasantía creado, se verifica si el alumno firmó el reglamento, en caso de ser así, ya completó el paso 1 y debe esperar la aprobación del admin.
       //Por lo tanto, se devuelve el paso 1.5
       const tmp2 = await pool.request()
       .query(`SELECT * FROM Reglamentos
-              WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+              WHERE RUN_Alumno = '${RUN}'`);
         
       if (tmp2.recordset.length > 0){
-        paso_actual = 1.5;
-        res.status(201).json({ message: 'Operación Exitosa.' });
-        return paso_actual;
+        step = 1.5;
       }
       else {
         //En caso de que no haya firmado el reglamento, se devuelve el paso 1.
-        paso_actual = 1;
-        res.status(201).json({ message: 'Operación Exitosa.' });
-        return paso_actual;
+        step = 1;
       }
     }
-    
+    res.json({ step : step });
+    return;
   }
   catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'ERROR: Error interno de servidor.' })
-    return error;
+    res.status(500).json({ error: 'Internal server error' });
+    return;
   }
 }
 
