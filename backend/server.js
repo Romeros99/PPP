@@ -62,6 +62,12 @@ app.get('/api/bd/pendientes', async(req, res) => {
   res.send(result.recordset);
 });
 
+//request para llevar el paso actual del alumno al frontend 
+app.get('/api/bd/pasoactual', async(req, res) => {
+  const result = await db_operation.getPasoActual(req.body, res);
+  res.send(result.recordset);
+});
+
 //request de crear reglamento
 app.post('/api/bd/crear/reglamento', async(req, res) => {
   await db_operation.crearReglamento(req.body, res);
