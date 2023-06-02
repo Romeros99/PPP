@@ -87,4 +87,9 @@ app.post('/api/bd/crear/empresa', async(req, res) => {
   await db_operation.crearEmpresa(req.body, res);
 });
 
+//request de crear supervisor
+app.post('/api/bd/crear/supervisor', async(req, res) => {
+  await db_operation.crearSupervisor(req.body, res);
+});
+
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));
