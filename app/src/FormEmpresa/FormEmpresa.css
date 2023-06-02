@@ -1,0 +1,22 @@
+.custom-form-group {
+    width: 50%; /* Ancho personalizado para la barra */
+  }
+  
+  .custom-form-group .input-select {
+    width: 50%; /* Ancho personalizado para el select */
+  }
+  
+  .custom-form-group .button-container {
+    gap: 15px; /* Espacio personalizado entre los botones */
+  }
+
+
+  .button-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .button-container button {
+    margin-right: 10px;
+  }
