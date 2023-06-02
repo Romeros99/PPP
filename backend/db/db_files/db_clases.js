@@ -45,4 +45,13 @@ class Empresa{
     this.Estado_Convenio = Estado_Convenio;
   }
 }
-module.exports = Alumno, Reglamento, Detalle_Pasantia, Empresa;
+
+class Supervisor{
+  constructor(RUN_Empresas, Nombres, Apellidos, Mail){
+    this.RUN_Empresas = RUN_Empresas;
+    this.Nombres = Nombres;
+    this.Apellidos = Apellidos;
+    this.Mail = Mail;
+  }
+}
+module.exports = Alumno, Reglamento, Detalle_Pasantia, Empresa, Supervisor;
