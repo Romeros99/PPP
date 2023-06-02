@@ -7,10 +7,28 @@ import {Button} from 'reactstrap';
 import axios from 'axios';
 
 const HomePageAlumno = () => {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(0);
   const [content, setContent] = useState('');
   const [showReglamento, setShowReglamento] = useState(true);
-  const rut = '20.358.711-2';
+  const rut = '19.248.635-2';
+
+  //Función para setear el paso del alumno.
+  const getPasoAlumno = async (rut) => {
+    try {
+      const response = await fetch(`/api/bd/pasoactual?RUN=${rut}`);
+  
+      if (!response.ok) {
+        throw new Error('Error en la búsqueda del Paso del Alumno');
+      }
+      const data = await response.json();
+      const step = data.step;
+
+      //Setter del CurrentStep
+      setCurrentStep(step);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   const checkRun = (e) => {
     if (rut) {
@@ -59,6 +77,7 @@ const HomePageAlumno = () => {
     }
   };
   const renderButtons = () => {
+    getPasoAlumno(rut);
     const buttons = [];
     for (let i = 1; i <= 9; i++) {
       buttons.push(
