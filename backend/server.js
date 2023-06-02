@@ -56,6 +56,11 @@ app.post('/api/mail/send-email', function(req, res) {
     });
 });
 
+//request de traer empresas
+app.get('/api/bd/empresas', async(req, res) => {
+  const result = await db_operation.getEmpresas();
+  res.send(result.recordset);
+});
 //request de traer RUNs de alumnos en estado pendiente
 app.get('/api/bd/pendientes', async(req, res) => {
   const result = await db_operation.getRUNsPendientes();
@@ -81,6 +86,16 @@ app.post('/api/bd/crear/pasantia', async(req, res) => {
 //request de eliminar pasantia
 app.post('/api/bd/eliminar/reglamento', async(req, res) => {
   await db_operation.removeReglamento(req.body, res);
+});
+
+//request de crear empresa
+app.post('/api/bd/crear/empresa', async(req, res) => {
+  await db_operation.crearEmpresa(req.body, res);
+});
+
+//request de crear supervisor
+app.post('/api/bd/crear/supervisor', async(req, res) => {
+  await db_operation.crearSupervisor(req.body, res);
 });
 
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));

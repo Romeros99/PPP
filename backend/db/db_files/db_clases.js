@@ -33,4 +33,25 @@ class Detalle_Pasantia{
   }
 }
 
-module.exports = Alumno, Reglamento, Detalle_Pasantia;
+class Empresa{
+  constructor(RUN_Empresas, Nombre, Calle_Direccion, Numero_Direccion, Comuna_Direccion, Ciudad_Direccion, Rubro, Estado_Convenio){
+    this.RUN_Empresas = RUN_Empresas;
+    this.Nombre = Nombre;
+    this.Calle_Direccion = Calle_Direccion;
+    this.Numero_Direccion = Numero_Direccion;
+    this.Comuna_Direccion = Comuna_Direccion;
+    this.Ciudad_Direccion = Ciudad_Direccion;
+    this.Rubro = Rubro;
+    this.Estado_Convenio = Estado_Convenio;
+  }
+}
+
+class Supervisor{
+  constructor(RUN_Empresas, Nombres, Apellidos, Mail){
+    this.RUN_Empresas = RUN_Empresas;
+    this.Nombres = Nombres;
+    this.Apellidos = Apellidos;
+    this.Mail = Mail;
+  }
+}
+module.exports = Alumno, Reglamento, Detalle_Pasantia, Empresa, Supervisor;

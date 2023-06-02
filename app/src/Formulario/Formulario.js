@@ -7,6 +7,11 @@ function Formulario() {
   const [alumno, setAlumno] = useState({RUN_Alumno: '', Nombres: '', Apellidos: '', Mail_UAI: '', Mail_Personal: ''});
   const [reglamento, setReglamento] = useState({RUN_Alumno: '', Fecha: getCurrentDateString()});
   const [showModal, setShowModal] = useState(false);
+  const [showReglamento, setShowReglamento] = useState(true);
+
+  const handleReglamento = () => {
+    setShowReglamento(false)
+  }
 
   //Función en donde se irá cambiando las propiedades del alumno y del reglamento dependiendo de lo que se ingrese en el formulario.
   const setInput = (e) => {
@@ -119,13 +124,24 @@ function Formulario() {
   return (
     <div className="center">
         <h1>Confirmación de reglamento</h1>
-        <embed src= "http://localhost:4000/omega/pdf/DECRETO ACADEMICO REGLAMENTO FIC PRACTICA.pdf" width="800" height="575" type='application/pdf'/>
-    
+        {showReglamento ? (
+        <div>
+        <embed
+          src="http://localhost:4000/omega/pdf/DECRETO ACADEMICO REGLAMENTO FIC PRACTICA.pdf"
+          width="800"
+          height="575"
+          type="application/pdf"
+        />
+        
         <div className="button-container">
-            <Button className="accept-button" onClick={() => setShowModal(true)}>Aceptar</Button>
-            <Button className="reject-button">Rechazar</Button>
+        <Button className="accept-button " onClick={handleReglamento}>Aceptar</Button>
+        <Button className="reject-button">Rechazar</Button>
         </div>
-    
+        </div>
+      ) : (
+        <p>Ya se aceptó el reglamento</p>
+      )}
+        {/*
         <Modal isOpen={showModal}>
             <ModalHeader>
                 <h2>Ingrese sus datos</h2>
@@ -192,6 +208,7 @@ function Formulario() {
         </Form>
     </ModalBody>
   </Modal>
+  */}
   </div>
   );
 }
