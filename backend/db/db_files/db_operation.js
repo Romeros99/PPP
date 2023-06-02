@@ -157,12 +157,58 @@ const crearEmpresa = async(Empresa, res) => {
     res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
     return error;
   }
-} 
+}
+
+const crearSupervisor = async(Supervisor, res) => {
+  try {
+
+    //Verifica que los campos del alumno no estén vacíos y, en caso de ser vacíos, envía un error como respuesta al Frontend.
+    if (Supervisor.Nombres.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese un nombre.' });
+      return;
+    }
+
+    if (Supervisor.Apellidos.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese un apellido.' });
+      return;
+    }
+
+    if (Supervisor.Mail.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese un mail.' });
+      return;
+    }
+
+    //Consulta si el alumno ya está en la base de datos, en caso de ser así, envía un error al Frontend.
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+    .query(`SELECT * FROM Supervisores
+            WHERE ID_Supervisor = '${Supervisor.ID_Supervisor}'`);
+
+    if (result.recordset.length > 0) {
+      res.status(400).json({ error: 'ERROR: Supervisor ya registrado.' });
+      return;
+    }
+
+    //En caso de que no se haya enviado un error, se realiza el Query para agregar al alumno a la base de datos.
+
+    const insertSupervisor = await pool.request().query(`INSERT INTO Supervisores (RUN_Empresas, Nombres, Apellidos, Mail) VALUES
+      ('${(Supervisor.RUN_Empresas)}', '${Supervisor.Nombres}', '${Supervisor.Apellidos}', '${Supervisor.Mail}')`);
+    
+    res.status(201).json({ message: 'Supervisor registrado exitosamente.' });
+    return;
+  }
+  catch(error) {
+    console.error(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+}
 module.exports = {
   getRUNsPendientes,
   crearReglamento,
   crearPasantia,
   removeReglamento,
   getEmpresas,
-  crearEmpresa
+  crearEmpresa,
+  crearSupervisor
 }
