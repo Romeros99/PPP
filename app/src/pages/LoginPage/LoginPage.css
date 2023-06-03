@@ -1,82 +1,85 @@
 .center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.formulario label {
+  display: block;
+  margin-bottom: 10px;
+}
+  
+  .pdf-container {
+    margin: 20px auto;
+    width: 80%;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+  }
+  
+  nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav li {
+    margin-right: 10px;
+  }
+  
+  nav button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  nav button:hover {
+    color: #ccc;
+  }
+  
+  
+  iframe {
+    border: none;
+  }
+
+  .form-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
   }
-  
-  .formulario {
+
+  .button-container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    margin-top: 20px;
   }
   
-  .formulario label {
-    display: block;
-    margin-bottom: 10px;
+  .accept-button {
+    margin-right: 20px;
+    
+    background-color: rgb(0, 145, 255);
   }
-    
-    .pdf-container {
-      margin: 20px auto;
-      width: 80%;
-    }
-    
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-    }
-    
-    nav ul {
-      display: flex;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    
-    nav li {
-      margin-right: 10px;
-    }
-    
-    nav button {
-      background-color: transparent;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    
-    nav button:hover {
-      color: #ccc;
-    }
-    
-    
-    iframe {
-      border: none;
-    }
-  
-    .form-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .button-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 15px;
-    }
-    
-    .accept-button {
-      margin-right: 20px;
-      
-      background-color: rgb(0, 145, 255);
-    }
+
+  .button{
+    justify-content: center;
+  }
