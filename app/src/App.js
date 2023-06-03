@@ -1,6 +1,8 @@
 import './App.css';
-import React from 'react';
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {Button} from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+
 
 //Importa las paginas de alumno y administrador
 import HomePageAlumno from "./pages/HomePageAlumno/HomePageAlumno";
@@ -9,25 +11,68 @@ import LoginPage from './pages/LoginPage/LoginPage';
 
 //Función principal
 function App() {
+
+const [username, setUsername] = useState('');
+useEffect(() => {
+    // Llamar a la función get_user para obtener el nombre de usuario
+    getUsername();
+  }, []);
+
+  const handleLogout = () => {
+    // Eliminar la cookie "access-Token"
+    document.cookie = "access-Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Redireccionar a la página de inicio de sesión
+    window.location.href = "/";
+  };
+
+  const getUsername = async () => {
+    try {
+      const response = await fetch('/omega/decode_user_token', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUsername(data.nombre);
+      } else {
+        console.log('Error al obtener el nombre de usuario');
+      }
+    } catch (error) {
+      console.log('Error en la solicitud de obtener el nombre de usuario:', error);
+    }
+  };
+
   return (
     <Router>
-      <nav className="navbar">  
-   <h1 className='navheader'>Pasantías UAI</h1> 
-        <ul>
+    <nav className="navbar">  
+      <h1 className='navheader'>Pasantías UAI</h1> 
+      <li className="welcome-message">
+        {username && <span>Bienvenido, {username}</span>}
+      </li>
+      <ul>
+        {username && (
           <li>
-            <Link to="/" className="btn">Alumno</Link>
+            <Button
+              color="danger"
+              onClick={handleLogout}
+              className="logout-btn"
+              style={{ marginTop: '8px', marginRight: '8px', padding: '3px 6px', fontSize: '14px' }}
+            >
+              Cerrar Sesión
+            </Button>
           </li>
-          <li>
-            <Link to="/about" className="btn">Admin</Link>
-          </li>
-        </ul>
-      </nav>
-      <Routes>
-        <Route exact path="/login" element={<LoginPage />} />
-        <Route exact path="/" element={<HomePageAlumno />} />
-        <Route path="/about" element={<HomePageAdmin />} />
-      </Routes>
-    </Router> 
+        )}
+      </ul>
+    </nav>
+    <Routes>
+      <Route path="/" element={<LoginPage />} /> {/* Ruta por defecto */}
+      <Route path="/alumno" element={<HomePageAlumno />} />
+      <Route path="/admin" element={<HomePageAdmin />} />
+    </Routes>
+  </Router> 
   );
 }
 
