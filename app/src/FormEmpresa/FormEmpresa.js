@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Label, Input, Row,Col } from 'reactstrap';
 import './FormEmpresa.css';
 import FormSupervisor from '../FormSupervisor/FormSupervisor';
 
-function FormEmpresa(){
+function FormEmpresa({Paso, RUN}){
     const [showForm, setShowForm] = useState(false);
     const [showBar, setShowBar] = useState(true);
     const [empresa, setEmpresa] = useState({RUN_Empresas: '', Nombre: '', Calle_Direccion: '', Numero_Direccion: '', Comuna_Direccion: '', Ciudad_Direccion: '', Rubro: '', Estado_Convenio: 'Pendiente'});
@@ -162,10 +162,6 @@ function FormEmpresa(){
         setShowForm(false);
         setIsDisabled(true);
       };
-      const superAEmpresa = () => {
-        console.log('Acción realizada por superAEmpresa');
-        // Aquí puedes realizar cualquier acción adicional que necesites
-      };
     return(
         <div>
         <div>
@@ -308,7 +304,7 @@ function FormEmpresa(){
                     {showButton && <Button className='accept-button margin-left' onClick = {() => handleClick()}>Confirmar</Button>}
                     {showButton &&<Button onClick={handleGoBack}>Volver</Button>}
                     {isDone && (
-                        <FormSupervisor setShowButton={setShowButton} setShowForm={setShowForm} setShowFormSupervisor = {setShowFormSupervisor} showFormSupervisor = {showFormSupervisor} empresa = {empresa}/>
+                        <FormSupervisor setShowButton={setShowButton} setShowForm={setShowForm} setShowFormSupervisor = {setShowFormSupervisor} showFormSupervisor = {showFormSupervisor} empresa = {empresa} Paso = {Paso} RUN = {RUN}/>
                     )}
                 </Form>
                 </div>

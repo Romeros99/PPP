@@ -1,17 +1,29 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Button, Form, Label, Input, Row,Col, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import FuncionPaso from '../FuncionPaso/FuncionPaso';
 
-const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, showFormSupervisor, empresa}) => {
+const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, showFormSupervisor, empresa, Paso, RUN}) => {
     console.log(empresa)
     const [supervisor, setSupervisor] = useState({ID_Supervisor: '', RUN_Empresas: '', Nombres: '', Apellidos: '', Mail: ''});
     const [showModal, setShowModal] = useState(false);
-
+    
 
     const handleGoBackSup = () =>{
         setShowButton(true);
         setShowForm(true);
         setShowFormSupervisor(false);
     }
+
+    const handleFormularios = () => {
+        Paso = Paso + 0.5;
+        FuncionPaso(Paso, RUN);
+        setShowForm(false)
+        setShowButton(false)
+        setTimeout(() => {
+            window.location.href = '/';
+          }, 500);
+      }
+    
     const handleInputChange = (e) =>{
         const { name, value } = e.target;
           setSupervisor(prevState => ({
@@ -36,7 +48,8 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
                 })
             })
             const data = await respuesta.json();
-            setShowModal(false)
+            setShowModal(false);
+            handleFormularios();
             if (data.error) {
               alert(data.error);
             }
@@ -96,6 +109,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
                 </Button>
             </ModalFooter>
       </Modal>
+      
     </div>
     )
 }   

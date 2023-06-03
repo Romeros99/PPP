@@ -81,7 +81,6 @@ const getPasoActual = async(RUN, res) => {
     const tmp = await pool.request()
     .query(`SELECT * FROM Detalle_Pasantia
             WHERE RUN_Alumno = '${RUN}'`);
-    
     if (tmp.recordset.length > 0) {
       const resultado = await pool.request()
       .query(`SELECT Paso_Actual FROM Detalle_Pasantia
@@ -94,7 +93,6 @@ const getPasoActual = async(RUN, res) => {
       const tmp2 = await pool.request()
       .query(`SELECT * FROM Reglamentos
               WHERE RUN_Alumno = '${RUN}'`);
-        
       if (tmp2.recordset.length > 0){
         step = 1.5;
       }
@@ -111,6 +109,19 @@ const getPasoActual = async(RUN, res) => {
     return;
   }
 }
+const cambiarPasoActual = async (Paso, RUN, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET Paso_Actual = '${Paso}' WHERE RUN_Alumno = '${RUN}'`);
+    res.status(201).json({ message: 'Paso cambiado correctamente.' });
+    return;
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+};
 
 const getEmpresas = async() => {
   try {
@@ -250,5 +261,6 @@ module.exports = {
   getEmpresas,
   crearEmpresa,
   crearSupervisor,
-  getPasoActual
+  getPasoActual,
+  cambiarPasoActual
 }

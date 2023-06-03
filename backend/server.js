@@ -74,6 +74,12 @@ app.get('/api/bd/pasoactual', async(req, res) => {
   await db_operation.getPasoActual(RUN, res);
 });
 
+app.post('/api/bd/cambiarPaso', async(req, res) => {
+  const { Paso,RUN } = req.body;
+  await db_operation.cambiarPasoActual(Paso, RUN, res);
+});
+
+
 //request de crear reglamento
 app.post('/api/bd/crear/reglamento', async(req, res) => {
   await db_operation.crearReglamento(req.body, res);
