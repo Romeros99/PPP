@@ -1,7 +1,7 @@
 Para la correcta ejecución de la aplicación, es necesario instalar las siguientes dependencias:
 Dentro de ./app:
 
-npm i react nodemon react-bootstrap reactstrap bootstrap react-router-dom eslint bcryptjs
+npm i react nodemon react-bootstrap reactstrap bootstrap react-router-dom eslint
 
 Dentro de ./backend:
 
@@ -9,7 +9,7 @@ npm i @sendgrid/mail body-parser cors express mssql nodemon
 
 Dentro de ./omega:
 
-npm i body-parser cors express mssql nodemon path
+npm i body-parser cors express mssql nodemon path jsonwebtoken cookie-parser
 
 Además, se debe crear un servidor de bases de datos SQL en Microsoft Server SQL y modificar el archivo ./backend/db/db_files/db_config.js con la siguiente información:
 
