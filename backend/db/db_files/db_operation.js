@@ -60,7 +60,7 @@ const crearPasantia = async(Alumno, res) => {
     //Deja el resto de las calumnas en NULL ya que son la información que se debería registrar en el siguiente Paso de la aplicación.
     const pool = await sql.connect(config);
     const insertPasantia = await pool.request().query(`INSERT INTO Detalle_Pasantia VALUES
-      ('${Alumno.RUN_Alumno}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)`);
+      ('${Alumno.RUN_Alumno}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.0)`);
     
     res.status(201).json({ message: 'Pasantía creada.' });
     return;
@@ -81,7 +81,7 @@ const getPasoActual = async(RUN, res) => {
     const tmp = await pool.request()
     .query(`SELECT * FROM Detalle_Pasantia
             WHERE RUN_Alumno = '${RUN}'`);
-    console.log("consola: ", tmp.recordset)
+
     if (tmp.recordset.length > 0) {
       const resultado = await pool.request()
       .query(`SELECT Paso_Actual FROM Detalle_Pasantia
@@ -94,7 +94,7 @@ const getPasoActual = async(RUN, res) => {
       const tmp2 = await pool.request()
       .query(`SELECT * FROM Reglamentos
               WHERE RUN_Alumno = '${RUN}'`);
-      console.log("consola: ", tmp2.recordset)
+
       if (tmp2.recordset.length > 0){
         step = 1.5;
       }
