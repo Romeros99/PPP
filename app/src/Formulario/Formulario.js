@@ -2,16 +2,15 @@ import React, {useState} from 'react';
 import {Button} from 'reactstrap';
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
 
-function Formulario({Paso, alumno}) {
+function Formulario({Paso, RUN}) {
   //Definición de constantes en donde se almacenará el alumno, el reglamento y si se debe o no mostrar el modal.
-  const [reglamento, setReglamento] = useState({RUN_Alumno: alumno.RUN_Alumno, Fecha: getCurrentDateString()});
+  const [reglamento, setReglamento] = useState({RUN_Alumno: RUN, Fecha: getCurrentDateString()});
   const handleReglamento = () => {
-    const RUN = alumno.RUN_Alumno;
     console.log(RUN);
     Paso = Paso + 0.5;
     FuncionPaso(Paso, RUN);
     setTimeout(() => {
-      window.location.href = '/';
+      window.location.href = '/alumno';
     }, 500);
   }
 
@@ -73,7 +72,6 @@ function Formulario({Paso, alumno}) {
       ['Fecha']: getCurrentDateString()
     }));
     //Crear al alumno y al registro de reglamento en la BD.
-    console.log(alumno);
     entregarDataReglamento();
   }
   

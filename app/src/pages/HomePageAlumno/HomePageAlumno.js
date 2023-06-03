@@ -4,12 +4,33 @@ import Formulario from '../../Formulario/Formulario.js'
 import FormEmpresa from '../../FormEmpresa/FormEmpresa';
 import React, { useState, useEffect } from 'react';
 import {Button} from 'reactstrap';
-import axios from 'axios';
 
 const HomePageAlumno = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [content, setContent] = useState('');
-  const rut = '20.358.711-2';
+  const [cuenta, setCuenta] = useState({mail: '', run: '', nombre: '',role: ''});
+  
+  useEffect(() => {
+    fetchCuenta();
+  }, []);
+
+  const fetchCuenta = async () => {
+    try {
+      const response = await fetch('/omega/decode_user_token', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+      const newData = await response.json();
+      setCuenta(newData);
+      console.log(cuenta);
+
+    } catch (error) {
+      console.error('Error fetching RUNs:', error);
+    }
+  };
   //Función para setear el paso del alumno.
   const getPasoAlumno = async (rut) => {
     try {
@@ -35,12 +56,11 @@ const HomePageAlumno = () => {
   };
 
   const generarContenido = (step) => {
-    const alumno = ({RUN_Alumno: '20.358.711-2', Nombres: 'Alejandro', Apellidos: 'Romero', Mail_UAI: 'aleromero@uai.com', Mail_Personal: 'aleromeros1999@gmail.com'});
     console.log(step)
     switch (step){
       case 1:
       return (
-        <Formulario  Paso={step} alumno = {alumno}/>
+        <Formulario  Paso={step} RUN = {cuenta.run}/>
       );
       case 1.5:
         console.log("prueba")
@@ -51,7 +71,7 @@ const HomePageAlumno = () => {
       );
       case 2:
         return (
-          <FormEmpresa RUN={rut} Paso={step} />
+          <FormEmpresa RUN={cuenta.run} Paso={step} />
         );
       case 2.5:
         return (
@@ -60,7 +80,7 @@ const HomePageAlumno = () => {
     }
   };
   const renderButtons = () => {
-    getPasoAlumno(rut);
+    getPasoAlumno(cuenta.run);
     const buttons = [];
     console.log(currentStep);
     for (let i = 1; i <= 9; i++) {

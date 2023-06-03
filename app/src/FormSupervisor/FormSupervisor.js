@@ -20,7 +20,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
         setShowForm(false)
         setShowButton(false)
         setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = '/alumno';
           }, 500);
       }
     

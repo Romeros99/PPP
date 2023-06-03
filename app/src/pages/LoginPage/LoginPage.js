@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs';
 import 'bootstrap/dist/css/bootstrap.css';
 import './LoginPage.css';
 import React, { useState } from 'react';
@@ -80,13 +79,11 @@ const LoginPage = () => {
   const handleLogin = async() => {
     // Lógica para el inicio de sesión
     if (userType === 'alumno' && username && password) {
-      const hashedPassword = password;
       Login_alumno(username, password);
       
       // Iniciar sesión como alumno
       console.log('Iniciar sesión como alumno:', username, password);
     } else if (userType === 'administrador' && username && password) {
-      const hashedPassword = password;
       Login_admin(username, password);
 
       // Iniciar sesión como administrador
