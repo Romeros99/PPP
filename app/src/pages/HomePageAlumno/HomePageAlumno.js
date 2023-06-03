@@ -60,6 +60,7 @@ const HomePageAlumno = () => {
     }
   };
   const renderButtons = () => {
+    getPasoAlumno(rut);
     const buttons = [];
     console.log(currentStep);
     for (let i = 1; i <= 9; i++) {

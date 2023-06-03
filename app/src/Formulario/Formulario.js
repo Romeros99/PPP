@@ -1,6 +1,5 @@
-import Form from 'react-bootstrap/Form';
 import React, {useState} from 'react';
-import {Button, Modal, ModalHeader, ModalBody} from 'reactstrap';
+import {Button} from 'reactstrap';
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
 
 function Formulario({Paso, alumno}) {

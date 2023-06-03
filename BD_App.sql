@@ -50,6 +50,7 @@ CREATE TABLE Detalle_Pasantia(
     Descripcion_Proyecto VARCHAR(120),
     Fecha_Inicio DATE,
     Horas_Semanales TINYINT,
+    Paso_actual NUMERIC(2,1),
     PRIMARY KEY (ID_Pasantia)
 );
 
@@ -65,6 +66,6 @@ VALUES
     ('96.653.890-2', 'Maersk Chile S.A.', 'Av. Apoquindo', 3650, 'Las Condes', 'Santiago', 'Comerciantes al por Mayor de Vehículos Motorizados', 'Vigente'),
     ('90.286.000-2', 'Brititsh American Tobacco Chile Operaciones S.A.', 'Fundo La Rotunda Ruta 68', 0, 'Casablanca', 'Casablanca', 'Industrias Manufactureras de Tabaco', 'Pendiente');
 
-INSERT INTO Detalle_Pasantia(RUN_Alumno, RUN_Empresas, RUN_Profesor_Guia, ID_Reglamento, ID_Supervisor, Nombre_Proyecto, Descripcion_Proyecto, Fecha_Inicio, Horas_Semanales)
+INSERT INTO Detalle_Pasantia(RUN_Alumno, RUN_Empresas, RUN_Profesor_Guia, ID_Reglamento, ID_Supervisor, Nombre_Proyecto, Descripcion_Proyecto, Fecha_Inicio, Horas_Semanales, Paso_actual)
 VALUES
-    ('19.248.635-1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    ('19.248.635-1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.0);
