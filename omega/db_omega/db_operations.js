@@ -105,9 +105,86 @@ const removeAlumno = async(Alumno, res) => {
   }
 }
 
+//verifica si  coinciden las credenciales (ajustar para mmssql)
+// Verifica si coinciden las credenciales (utilizando MSSQL)
+const Login_Alumno = (Mail, Clave) => {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT Mail_UAI, Clave FROM Alumnos WHERE Mail_UAI = @Mail AND Clave = @Clave';
+    const pool = new sql.ConnectionPool(config);
+    pool.connect().then((pool) => {
+      return pool.request()
+        .input('Mail', sql.VarChar, Mail)
+        .input('Clave', sql.VarChar, Clave)
+        .query(query);
+    }).then((result) => {
+      const isAuthenticated = result.recordset.length > 0;
+      resolve(isAuthenticated);
+      pool.close();
+    }).catch((error) => {
+      console.error('Error al ejecutar la consulta:', error);
+      reject(error);
+      pool.close();
+    });
+  });
+};
+// Verifica si coinciden las credenciales (utilizando MSSQL)
+const Login_Admin = (Mail, Clave) => {
+  return new Promise((resolve, reject) => {
+    const query = 'SELECT Mail_UAI, Clave FROM Administradores WHERE Mail_UAI = @Mail AND Clave = @Clave';
+    const pool = new sql.ConnectionPool(config);
+    pool.connect().then((pool) => {
+      return pool.request()
+        .input('Mail', sql.VarChar, Mail)
+        .input('Clave', sql.VarChar, Clave)
+        .query(query);
+    }).then((result) => {
+      const isAuthenticated = result.recordset.length > 0;
+      resolve(isAuthenticated);
+      pool.close();
+    }).catch((error) => {
+      console.error('Error al ejecutar la consulta:', error);
+      reject(error);
+      pool.close();
+    });
+  });
+};
+
+
+// Obtiene datos del usuario a partir del mail, creada para pasar los datos al token (utilizando MSSQL)
+const get_userdata = (Mail, rol) => {
+  return new Promise((resolve, reject) => {
+    let query;
+    if (rol === 'alumno') {
+      query = 'SELECT Mail_UAI, RUN_Alumno, Nombres, Apellidos FROM Alumnos WHERE Mail_UAI = @Mail';
+    } else if (rol === 'admin') {
+      query = 'SELECT Mail_UAI, RUN_Administrador, Nombres, Apellidos FROM Administradores WHERE Mail_UAI = @Mail';
+    } else {
+      reject(new Error('Invalid role'));
+      return;
+    }
+    
+    const pool = new sql.ConnectionPool(config);
+    pool.connect().then((pool) => {
+      return pool.request()
+        .input('Mail', sql.VarChar, Mail)
+        .query(query);
+    }).then((result) => {
+      const userData = result.recordset[0];
+      resolve(JSON.stringify(userData));
+      pool.close();
+    }).catch((error) => {
+      console.error('Error al ejecutar la consulta:', error);
+      reject(error);
+      pool.close();
+    });
+  });
+};
 module.exports = {
   arr_to_str,
   getAlumnosPendientes,
   crearAlumno,
-  removeAlumno
+  removeAlumno,
+  Login_Alumno,
+  Login_Admin,
+  get_userdata
 }
