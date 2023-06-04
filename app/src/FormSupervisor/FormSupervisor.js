@@ -3,7 +3,6 @@ import { Button, Form, Label, Input, Row,Col, Modal, ModalHeader, ModalBody, Mod
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
 
 const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, showFormSupervisor, empresa, Paso, RUN}) => {
-    console.log(empresa)
     const [supervisor, setSupervisor] = useState({ID_Supervisor: '', RUN_Empresas: '', Nombres: '', Apellidos: '', Mail: ''});
     const [showModal, setShowModal] = useState(false);
     
@@ -48,18 +47,46 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
                 })
             })
             const data = await respuesta.json();
-            setShowModal(false);
-            handleFormularios();
+            console.log("respuesta data: ", JSON.stringify(data));
             if (data.error) {
               alert(data.error);
             }
             else{
+              setShowModal(false);
+
+              const idSupervisor = data.lastID;
+              console.log('ID supervisor: ', idSupervisor);
+              FuncionDetalle(empresa.RUN_Empresas, idSupervisor, RUN);
+              handleFormularios();
             }
         } catch (error){
             alert('ERROR: Error en el intento de agregar el supervisor.')
         }
     };
     
+    const FuncionDetalle = async (RUN_Empresas, ID_Supervisor, RUN_Alumno) => {
+        try {
+          console.log('RUN: ',RUN_Alumno,  ' Run Empresas: ',RUN_Empresas, 'ID Supervisor: ', ID_Supervisor);
+          const res = await fetch('/api/bd/cambiarDetalle', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ RUN_Empresas, ID_Supervisor, RUN_Alumno }) // Enviar Paso y RUN en un objeto JSON
+            
+          });
+          const data = await res.json();
+          //console.log(data);
+    
+          if (data.error) {
+            alert(data.error);
+          }
+        } catch (error) {
+          alert('ERROR: Error en la actualizacion del paso.');
+        }
+      };
+
     return(
         <div >
             {showFormSupervisor && (
@@ -98,7 +125,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             <ModalHeader closeButton = {'true'}>Confirmación
                 </ModalHeader>
                 <ModalBody>
-                <p>¿Estás seguro de querer envíar el supervisor a la administración de la universidad?</p>
+                <p>¿Estás seguro de querer envíar la información sobre la empresa y el supervisor a la administración de la universidad?</p>
                 </ModalBody>
                 <ModalFooter>
                 <Button color="primary" onClick={entregarDataSupervisor}>

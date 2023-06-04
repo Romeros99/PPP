@@ -13,32 +13,6 @@ function PDFModal({pdfUrl, Alumno}) {
     setShowModal(true);
   };
  
-  //envia una solicitud post para eliminar alumno de la based de datos
-  const sendDataAlumno = async () => {
-    try {
-      const respuesta = await fetch('/omega/bd/eliminar/alumno', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          RUN_Alumno: alumno.RUN_Alumno,
-        })
-      })
-  
-      const data = await respuesta.json();
-      
-      if (data.error) {
-        alert(data.error);
-      } else {
-        alert("Alumno eliminado exitosamente!");
-      }
-    } catch (error) {
-      alert('ERROR: Error en la eliminación del alumno.')
-    }
-  }
-
 //envia realiza una solicitud post para eliminar registro de un reglamento de la base de datos
   const sendDataReglamento = async () => {
     try {
@@ -53,7 +27,6 @@ function PDFModal({pdfUrl, Alumno}) {
         })
       })
   
-      await sendDataAlumno();
     } catch (error) {
       alert('ERROR: Error en la eliminación del alumno.')
     }
