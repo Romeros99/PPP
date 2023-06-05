@@ -3,19 +3,19 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-d
 import { Button } from 'reactstrap';
 import React, { useState, useEffect } from 'react';
 
-// Importa las paginas de alumno y administrador
+//Importa las paginas de alumno y administrador
 import HomePageAlumno from "./pages/HomePageAlumno/HomePageAlumno";
 import HomePageAdmin from "./pages/HomePageAdmin/HomePageAdmin";
 import LoginPage from './pages/LoginPage/LoginPage';
 
-// Función principal
+//Función principal
 function App() {
   const [username, setUsername] = useState('');
   const [role, setRole] = useState('');
   const [redirect, setRedirect] = useState(null);
 
   useEffect(() => {
-    // Llamar a la función getUsername para obtener el nombre de usuario
+    // Llamar a la función get_user para obtener el nombre de usuario
     getUsername();
   }, []);
 
@@ -28,13 +28,9 @@ function App() {
 
   const checkRolAndRedirect = async (role) => {
     if (role === 'alumno') {
-      if (window.location.pathname !== '/alumno') {
-        setRedirect('/alumno');
-      }
+      setRedirect('/alumno');
     } else if (role === 'admin') {
-      if (window.location.pathname !== '/admin') {
-        setRedirect('/admin');
-      }
+      setRedirect('/admin');
     } else {
       setRedirect('/');
     }
@@ -85,30 +81,9 @@ function App() {
         </ul>
       </nav>
       <Routes>
-        <Route
-          path="/"
-          element={redirect ? <Navigate to={redirect} /> : <LoginPage />}
-        /> {/* Ruta por defecto */}
-        <Route
-          path="/alumno"
-          element={
-            role === 'alumno' ? (
-              <HomePageAlumno />
-            ) : (
-              <Navigate to="/admin" replace={true} />
-            )
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            role === 'admin' ? (
-              <HomePageAdmin />
-            ) : (
-              <Navigate to="/alumno" replace={true} />
-            )
-          }
-        />
+        <Route path="/" element={redirect ? <Navigate to={redirect} /> : <LoginPage />} /> {/* Ruta por defecto */}
+        <Route path="/alumno" element={<HomePageAlumno />} />
+        <Route path="/admin" element={<HomePageAdmin />} />
       </Routes>
     </Router>
   );
