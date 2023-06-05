@@ -64,7 +64,14 @@ VALUES
 INSERT INTO Empresas(RUN_Empresas, Nombre, Calle_Direccion, Numero_Direccion, Comuna_Direccion, Ciudad_Direccion, Rubro, Estado_Convenio)
 VALUES
     ('96.653.890-2', 'Maersk Chile S.A.', 'Av. Apoquindo', 3650, 'Las Condes', 'Santiago', 'Comerciantes al por Mayor de Vehículos Motorizados', 'Vigente'),
-    ('90.286.000-2', 'Brititsh American Tobacco Chile Operaciones S.A.', 'Fundo La Rotunda Ruta 68', 0, 'Casablanca', 'Casablanca', 'Industrias Manufactureras de Tabaco', 'Pendiente');
+    ('90.286.000-2', 'Brititsh American Tobacco Chile Operaciones S.A.', 'Fundo La Rotunda Ruta 68', 0, 'Casablanca', 'Casablanca', 'Industrias Manufactureras de Tabaco', 'Pendiente'),
+    ('70.123.456-7', 'Automotriz del Pacífico', 'Avenida Los Conquistadores', 1234, 'Las Condes', 'Santiago', 'Automotriz', 'Vigente'),
+    ('91.234.567-8', 'Ingeniería y Construcción Ríos', 'Calle Los Alamos', 567, 'Providencia', 'Santiago', 'Construcción', 'Vigente'),
+    ('72.345.678-9', 'Servicios Tecnológicos Innovadores', 'Avenida Libertador Bernardo O Higgins', 789, 'Ñuñoa', 'Santiago', 'Soluciones Tecnológicas', 'Pendiente'),
+    ('83.456.789-0', 'Comercializadora del Sur', 'Calle Los Leones', 890, 'Concepción Centro', 'Concepción', 'Comercio de Maquinaria Industrial', 'Vigente'),
+    ('74.567.890-1', 'Agroindustrias del Valle', 'Avenida Agrícola', 234, 'Rancagua', 'Rancagua', 'Agroindustria', 'Vigente'),
+    ('85.678.901-2', 'Consultoría Estratégica Global', 'Calle Providencia', 456, 'Providencia', 'Santiago', 'Consultoría del Sector Industrial', 'Vigente'),
+    ('86.789.012-3', 'Servicios Logísticos Integrales', 'Avenida Los Andes', 789, 'Las Condes', 'Santiago', 'Logística y Distribución', 'Vigente');
 
 INSERT INTO Detalle_Pasantia(RUN_Alumno, RUN_Empresas, RUN_Profesor_Guia, ID_Reglamento, ID_Supervisor, Nombre_Proyecto, Descripcion_Proyecto, Fecha_Inicio, Horas_Semanales, Paso_Actual)
 VALUES
