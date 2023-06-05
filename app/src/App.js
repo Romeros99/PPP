@@ -8,6 +8,7 @@ import HomePageAlumno from "./pages/HomePageAlumno/HomePageAlumno";
 import HomePageAdmin from "./pages/HomePageAdmin/HomePageAdmin";
 import LoginPage from './pages/LoginPage/LoginPage';
 
+
 //Función principal
 function App() {
   const [username, setUsername] = useState('');
