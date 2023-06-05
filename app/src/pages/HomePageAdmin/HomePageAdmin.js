@@ -7,7 +7,8 @@ function HomePageAdmin() {
   //Se utiliza useState para almacenar en un array los alumnos que están en estado pendiente
   const [returnedRUNs, setReturnedRUNs] = useState(['']);
   const [returnedData, setReturnedData] = useState(['']);
-
+  const [active, setActive] = useState(false);
+  
   useEffect(() => {
     fetchRUNs();
   }, []);
@@ -31,6 +32,7 @@ function HomePageAdmin() {
     .then(res => res.json());
     //Se almacenan todos los RUNs retornados (json) en un returnedRUNs 
     setReturnedRUNs([...newData]);
+    console.log(returnedRUNs.length);
   }
 
   //Función que conecta con Omega para obtener la información de alumnos en estado pendiente mediante un GET Request.
@@ -60,13 +62,19 @@ function HomePageAdmin() {
 
   const funcFetchData = () => {
     fetchRUNs();
-    fetchData();
+    if(returnedRUNs.length >= 1){
+      setActive(true);
+      fetchData();
+    }else{
+      setActive(false);
+    }
+    
   }
 
   return (
     <div className = 'App'>
       <Button onClick = {() => funcFetchData()}>Buscar Alumnos Pendientes</Button>
-      <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>
+      {active && <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>}
     </div>
   )
 }
