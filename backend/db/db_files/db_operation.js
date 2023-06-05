@@ -241,18 +241,35 @@ const crearSupervisor = async(Supervisor, res) => {
 
     //En caso de que no se haya enviado un error, se realiza el Query para agregar al alumno a la base de datos.
 
-    const insertSupervisor = await pool.request().query(`INSERT INTO Supervisores (RUN_Empresas, Nombres, Apellidos, Mail) VALUES
+    const insertSupervisor = await pool.request().query(`INSERT INTO Supervisores (RUN_Empresas, Nombres, Apellidos, Mail) OUTPUT inserted.ID_Supervisor VALUES
       ('${(Supervisor.RUN_Empresas)}', '${Supervisor.Nombres}', '${Supervisor.Apellidos}', '${Supervisor.Mail}')`);
     
-    res.status(201).json({ message: 'Supervisor registrado exitosamente.' });
+    const lastID = insertSupervisor.recordset[0].ID_Supervisor;
+    console.log(lastID);
+    res.status(201).json({ message: 'Supervisor registrado exitosamente.', lastID: lastID });
     return;
   }
   catch(error) {
     console.error(error);
-    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    res.status(500).json({ error: 'ERROR: Error interno de servidor. (ID)' });
     return error;
   }
 }
+
+const cambiarDetallePasantia = async (RUN_Empresas, ID_Supervisor, RUN_Alumno,res) => {
+  try {
+    const pool = await sql.connect(config);
+    const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = '${RUN_Empresas}', ID_Supervisor = '${ID_Supervisor}' WHERE RUN_Alumno = '${RUN_Alumno}'`);
+    res.status(201).json({ message: 'Paso cambiado correctamente.' });
+    return;
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+};
+
 module.exports = {
   getRUNsPendientes,
   crearReglamento,
@@ -262,5 +279,6 @@ module.exports = {
   crearEmpresa,
   crearSupervisor,
   getPasoActual,
-  cambiarPasoActual
+  cambiarPasoActual,
+  cambiarDetallePasantia
 }

@@ -9,11 +9,12 @@ const HomePageAlumno = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [content, setContent] = useState('');
   const [cuenta, setCuenta] = useState({mail: '', run: '', nombre: '',role: ''});
+
   
   useEffect(() => {
     fetchCuenta();
   }, []);
-
+  //Fucion Get para obtener el rut de la cuenta que inicio sesion
   const fetchCuenta = async () => {
     try {
       const response = await fetch('/omega/decode_user_token', {
@@ -50,20 +51,18 @@ const HomePageAlumno = () => {
     }
   }
 
-  
   const handleClick = (step) => {
     setContent(generarContenido(step));
   };
-
+  //segun el paso en que se encuentra muestra distintas situaciones
   const generarContenido = (step) => {
-    console.log(step)
     switch (step){
       case 1:
       return (
         <Formulario  Paso={step} RUN = {cuenta.run}/>
+  
       );
       case 1.5:
-        console.log("prueba")
         return (
           <div className="center">
         <h3>Ya se aceptó el reglamento, se desbloqueará el Paso 2 cuando el administrador acepte sus requisitos</h3>
@@ -79,17 +78,17 @@ const HomePageAlumno = () => {
         )
     }
   };
+  //habilita y muestra colores de pasos segun el que está
   const renderButtons = () => {
     getPasoAlumno(cuenta.run);
     const buttons = [];
-    console.log(currentStep);
     for (let i = 1; i <= 9; i++) {
       buttons.push(
         <Button
           key={i}
           onClick={() => handleClick(i)}
           disabled= {i !== currentStep}
-          color = {i === currentStep ? 'primary' : 'secondary'}
+          color = {i === currentStep ? 'primary' : (currentStep > i ? 'success' : 'secondary')}
           style = {{margin: '5px', fontSize: '20px'}}
         >
           Paso {i}

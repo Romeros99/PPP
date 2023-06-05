@@ -105,4 +105,9 @@ app.post('/api/bd/crear/supervisor', async(req, res) => {
   await db_operation.crearSupervisor(req.body, res);
 });
 
+app.post('/api/bd/cambiarDetalle', async(req, res) => {
+  const { RUN_Empresas,ID_Supervisor,RUN_Alumno } = req.body;
+  await db_operation.cambiarDetallePasantia(RUN_Empresas, ID_Supervisor, RUN_Alumno,res);
+});
+
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));
