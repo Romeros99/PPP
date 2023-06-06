@@ -26,7 +26,7 @@ const HomePageAlumno = () => {
       });
       const newData = await response.json();
       setCuenta(newData);
-      console.log(cuenta);
+      getPasoAlumno(newData.run);
 
     } catch (error) {
       console.error('Error fetching RUNs:', error);
@@ -80,7 +80,6 @@ const HomePageAlumno = () => {
   };
   //habilita y muestra colores de pasos segun el que está
   const renderButtons = () => {
-    getPasoAlumno(cuenta.run);
     const buttons = [];
     for (let i = 1; i <= 9; i++) {
       buttons.push(
