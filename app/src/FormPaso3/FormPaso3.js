@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Button, Form, Label, Input, Row,Col, ModalBody, Modal, ModalHeader, ModalFooter, Alert } from 'reactstrap';
 import './FormPaso3.css';
 
@@ -26,11 +26,17 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
         setShowModal(false);
         setVisible(true);
     }
+
+    const handleMantener = () =>{
+        setShowRechazo(false);
+        setShowModal(false);
+        setVisible(true);
+    }
     return(
         <div>
         <div>
             <Alert color="success" isOpen={visible} toggle={() => setVisible(false)} style = {{position: 'absolute', top: 70, left: 50, right: 50 }}>
-            La empresa se ha borrado exitosamente
+            La empresa y supervisor se ha borrado exitosamente
             </Alert>
         </div>
         <div>
@@ -202,7 +208,9 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
                 </Form>
             </ModalBody>
             </Modal>
-            <Modal isOpen={showRechazo}>
+            
+      </div>
+        <Modal isOpen={showRechazo}>
                 <ModalHeader closeButton={true} toggle = {() => setShowRechazo(false)}>
                     <span>Confirmación</span>
                 </ModalHeader>
@@ -210,12 +218,10 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
                     <p>¿Desea eliminar la empresa de la base de datos?</p>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" >Mantener</Button>
+                    <Button color="primary" onClick={() => handleMantener()}>Mantener</Button>
                     <Button color="danger" onClick={() => handleBorrar()}>Borrar</Button>
                 </ModalFooter>
-                </Modal>
-      </div>
-      
+            </Modal>
       </div>
     )
 

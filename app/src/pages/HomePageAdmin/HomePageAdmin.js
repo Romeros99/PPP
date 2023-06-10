@@ -2,12 +2,17 @@ import './HomePageAdmin.css';
 import React, { useState, useEffect } from 'react';
 import Table from '../../Table/Table.js'
 import { Button } from 'reactstrap';
+import FormPaso3 from '../../FormPaso3/FormPaso3';
 
 function HomePageAdmin() {
   //Se utiliza useState para almacenar en un array los alumnos que están en estado pendiente
   const [returnedRUNs, setReturnedRUNs] = useState(['']);
   const [returnedData, setReturnedData] = useState(['']);
   const [active, setActive] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [datos, setDatos] = useState({RUN_Alumno: '20.358.429-6', RUN_Empresas: '90.286.000-2', Nombre: 'Brititsh American Tobacco Chile Operaciones S.A.',
+    Calle_Direccion: 'Fundo La Rotunda Ruta 68', Numero_Direccion: 0, Comuna_Direccion: 'Casablanca',
+    Ciudad_Direccion: 'Casablanca', Rubro: 'Industrias Manufactureras de Tabaco',Nombres: 'Alejandro', Apellidos: 'Romero', Mail: 'aleromeros1999@gmail.com'})
   
   useEffect(() => {
     fetchRUNs();
@@ -72,9 +77,13 @@ function HomePageAdmin() {
   }
 
   return (
+    <div>
     <div className = 'App'>
       <Button onClick = {() => funcFetchData()}>Buscar Alumnos Pendientes</Button>
       {active && <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>}
+      <Button onClick = {() => setShowForm(true)}>Mostrar</Button>
+      <FormPaso3 setShowModal = {setShowForm} showModal = {showForm} datos={datos} setDatos = {setDatos}></FormPaso3>
+    </div>
     </div>
   )
 }
