@@ -78,8 +78,15 @@ app.post('/api/bd/cambiarPaso', async(req, res) => {
   const { Paso,RUN } = req.body;
   await db_operation.cambiarPasoActual(Paso, RUN, res);
 });
-
-
+//request para crear una respuesta de supervisor
+app.post('/api/bd/crear/respuestaSupervisor', async(req,res) =>{
+  const {RUN_Alumno} = req.body;
+  await db_operation.crearRespuesta(RUN_Alumno,res);
+})
+app.post('/api/bd/aceptar/respuestaSupervisor', async(req) =>{
+  const {ID_Respuesta} = req.body;
+  await db_operation.aceptarRespuesta(ID_Respuesta);
+})
 //request de crear reglamento
 app.post('/api/bd/crear/reglamento', async(req, res) => {
   await db_operation.crearReglamento(req.body, res);
@@ -108,6 +115,16 @@ app.post('/api/bd/crear/supervisor', async(req, res) => {
 app.post('/api/bd/cambiarDetalle', async(req, res) => {
   const { RUN_Empresas,ID_Supervisor,RUN_Alumno } = req.body;
   await db_operation.cambiarDetallePasantia(RUN_Empresas, ID_Supervisor, RUN_Alumno,res);
+});
+
+app.get('/api/bd/get/respuesta', async (req, res) => {
+  const { ID_Respuesta } = req.query;
+  try {
+    const respuesta = await db_operation.getRespuesta(ID_Respuesta);
+    res.status(200).json(respuesta);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener la respuesta' });
+  }
 });
 
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));

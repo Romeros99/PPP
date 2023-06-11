@@ -101,7 +101,7 @@ const getPasoActual = async(RUN, res) => {
         step = 1;
       }
     }
-    res.json({ step : step });
+    res.status(200).json({ step : step });
     return;
   }
   catch (error) {
@@ -260,13 +260,61 @@ const cambiarDetallePasantia = async (RUN_Empresas, ID_Supervisor, RUN_Alumno,re
   try {
     const pool = await sql.connect(config);
     const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = '${RUN_Empresas}', ID_Supervisor = '${ID_Supervisor}' WHERE RUN_Alumno = '${RUN_Alumno}'`);
-    res.status(201).json({ message: 'Paso cambiado correctamente.' });
+    res.status(201).json({ message: 'Detalle pasantia actualizado correctamente.' });
     return;
     
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
     return error;
+  }
+};
+
+const crearRespuesta = async (RUN_Alumno, res) =>{
+  try{
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+    .query(`UPDATE Respuesta_Supervisor SET Tramitado = 1, Respuesta = 'Anulado' WHERE RUN_Alumno = '${RUN_Alumno}'`)
+    const insertRespuesta = await pool.request().query(`INSERT INTO Respuesta_Supervisor (RUN_Alumno, Tramitado, Respuesta) OUTPUT inserted.ID_Respuesta VALUES
+      ('${(RUN_Alumno)}', 0, NULL)`);
+      const lastID = insertRespuesta.recordset[0].ID_Respuesta;
+      //console.log(`http://localhost:3000/aceptado/${ID_Respuesta}`, `http://localhost:3000/rechazado/${ID_Respuesta}`)
+      res.status(201).json({ message: 'Respuesta de supervisor creada correctamente.', lastID: lastID});
+    return;
+  } catch (error){
+    console.error(error);
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+
+  }
+};
+
+const aceptarRespuesta = async (ID_Respuesta) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().query(`
+      SELECT * FROM Respuesta_Supervisor
+      WHERE (ID_Respuesta = '${ID_Respuesta}' AND Tramitado = 0)
+    `);
+
+    if (result.recordset.length > 0) {
+      const eliminar = await pool.request().query(`
+        UPDATE Respuesta_Supervisor
+        SET Tramitado = 1, Respuesta = 'Aceptado'
+        WHERE ID_Respuesta = '${ID_Respuesta}'
+      `);
+      const insertEmpresa = await pool.request().query(`
+        UPDATE Detalle_Pasantia
+        SET Paso_Actual = 5
+        WHERE RUN_Alumno = '${result.recordset[0].RUN_Alumno}'
+      `);
+    } else {
+      return
+    }
+  } catch (error) {
+    // Manejar el error en caso de que ocurra
+    console.error('Error:', error);
+    throw error;
   }
 };
 
@@ -280,5 +328,7 @@ module.exports = {
   crearSupervisor,
   getPasoActual,
   cambiarPasoActual,
-  cambiarDetallePasantia
+  cambiarDetallePasantia,
+  crearRespuesta,
+  aceptarRespuesta
 }

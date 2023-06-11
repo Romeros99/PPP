@@ -67,4 +67,12 @@ class Supervisor{
     this.Mail = Mail;
   }
 }
-module.exports = Alumno, Reglamento, Detalle_Pasantia, Empresa, Supervisor;
+
+class Respuesta_Supervisor{
+  constructor(RUN_Alumno, Tramitado, Respuesta){
+    this.RUN_Alumno = RUN_Alumno;
+    this.Tramitado = Tramitado;
+    this.Respuesta = Respuesta;
+  }
+}
+module.exports = Alumno, Reglamento, Detalle_Pasantia, Empresa, Supervisor, Respuesta_Supervisor;
