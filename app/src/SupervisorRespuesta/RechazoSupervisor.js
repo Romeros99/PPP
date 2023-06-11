@@ -1,43 +1,65 @@
-import React, {useEffect, useState } from 'react';
-import { useParams, useNavigate} from 'react-router-dom';
-import FuncionPaso from '../FuncionPaso/FuncionPaso';
+import React, {useLayoutEffect} from 'react';
+import { useParams} from 'react-router-dom';
+import logo from './logo_uai.png';
 
-const RechazoSupervisor = () => {
-    const { RUN } = useParams();
-    const navigate = useNavigate();
-    const Paso = 2;
-    const [step, setCurrentStep] = useState(0);
+const RespuestaSupervisor = ({setShowNavBar}) => {
+    setShowNavBar(false)
+    const { ID_Respuesta } = useParams();
 
-    const getPasoAlumno = async (RUN) => {
-          const response = await fetch(`/api/bd/pasoactual?RUN=${RUN}`);
-      
-          if (!response.ok) {
-            throw new Error('Error en la búsqueda del Paso del Alumno');
-          }
+    const FuncionAceptarRespuesta = async (ID_Respuesta) => {
+      try {
+        console.log('ID Supervisor: ', ID_Respuesta);
+        const res = await fetch('/api/bd/rechazar/respuestaSupervisor', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ ID_Respuesta})         
+        })
 
-          const data = await response.json();
-          const step = data.step;
-          //Setter del CurrentStep
-          setCurrentStep(step);
-          console.log("step:", step)
-
-          //Solo puede entrar 1 vez el supervisor para que se actualice la base de datos
-          if (step === 3.5) {
-            FuncionPaso(Paso, RUN);
-            //funcion eliminar supervisor
-            navigate('/rechazado');
-            
-          } else{
-            navigate('/respondido');
-          }
+      } catch (error) {
+        alert(error.message); // Mostrar el mensaje de error personalizado
       }
-    useEffect(() => {
-      getPasoAlumno(RUN);
-      console.log(step);
-        
-      }, [])
-    
-
     };
 
-export default RechazoSupervisor;
+      useLayoutEffect(() => {
+      FuncionAceptarRespuesta(ID_Respuesta);
+      
+      }, [])
+
+
+      return (
+        <div style={styles.container}>
+          <img src={logo} alt="Logo" style={styles.logo} />
+          <h1 style={styles.heading}>Estimado supervisor/a</h1>
+          <p style={styles.paragraph}>La respuesta se ha enviado a la Universidad, muchas gracias por su tiempo.</p>
+        </div>
+      );
+    };
+    
+    const styles = {
+      container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        backgroundColor: '#f5f5f5',
+      },
+      logo: {
+        width: '150px', // Ajusta el tamaño del logo según tus necesidades
+        marginBottom: '1rem',
+      },
+      heading: {
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        marginBottom: '1rem',
+      },
+      paragraph: {
+        fontSize: '1.5rem',
+        color: '#555',
+      },
+    };
+
+export default RespuestaSupervisor;

@@ -3,7 +3,6 @@ import React, { useState, useEffect} from 'react';
 import Table from '../../Table/Table.js'
 import { Button } from 'reactstrap';
 import FormPaso3 from '../../FormPaso3/FormPaso3';
-import { Link } from 'react-router-dom';
 
 function HomePageAdmin() {
   //Se utiliza useState para almacenar en un array los alumnos que están en estado pendiente
@@ -120,10 +119,10 @@ function HomePageAdmin() {
       <button onClick={handleClick}>Aceptar (supervisor acepta en mail)</button>
     );
   }
-  function MyButtonRechazar({ RUN }) {
+  function MyButtonRechazar({ idRespuestaSupervisor }) {
     const handleClick = () => {
-      const url = `/rechazo/${RUN}`;
-      window.open(url, '_blank');
+      const url = `/rechazo/${idRespuestaSupervisor}`;
+      window.open(url);
     };
     return (
       <button onClick={handleClick}>Rechazar (supervisor rechaza en mail)</button>
@@ -143,7 +142,7 @@ function HomePageAdmin() {
       <div>
       <br></br>
       <MyButton idRespuestaSupervisor = {idRespuestaSupervisor}></MyButton>
-      <MyButtonRechazar RUN = {'20.358.429-6'}></MyButtonRechazar>
+      <MyButtonRechazar idRespuestaSupervisor = {idRespuestaSupervisor}></MyButtonRechazar>
       </div>)}
     </div>
     </div>

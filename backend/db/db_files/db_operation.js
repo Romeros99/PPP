@@ -317,6 +317,34 @@ const aceptarRespuesta = async (ID_Respuesta) => {
     throw error;
   }
 };
+const rechazarRespuesta = async (ID_Respuesta) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request().query(`
+      SELECT * FROM Respuesta_Supervisor
+      WHERE (ID_Respuesta = '${ID_Respuesta}' AND Tramitado = 0)
+    `);
+
+    if (result.recordset.length > 0) {
+      const eliminar = await pool.request().query(`
+        UPDATE Respuesta_Supervisor
+        SET Tramitado = 1, Respuesta = 'Rechazado'
+        WHERE ID_Respuesta = '${ID_Respuesta}'
+      `);
+      const insertEmpresa = await pool.request().query(`
+        UPDATE Detalle_Pasantia
+        SET Paso_Actual = 2
+        WHERE RUN_Alumno = '${result.recordset[0].RUN_Alumno}'
+      `);
+    } else {
+      return
+    }
+  } catch (error) {
+    // Manejar el error en caso de que ocurra
+    console.error('Error:', error);
+    throw error;
+  }
+};
 
 module.exports = {
   getRUNsPendientes,
@@ -330,5 +358,6 @@ module.exports = {
   cambiarPasoActual,
   cambiarDetallePasantia,
   crearRespuesta,
-  aceptarRespuesta
+  aceptarRespuesta,
+  rechazarRespuesta
 }
