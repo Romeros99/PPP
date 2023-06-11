@@ -1,12 +1,15 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { Button } from 'reactstrap';
+import { Button} from 'reactstrap';
 import React, { useState, useEffect } from 'react';
 
 //Importa las paginas de alumno y administrador
 import HomePageAlumno from "./pages/HomePageAlumno/HomePageAlumno";
 import HomePageAdmin from "./pages/HomePageAdmin/HomePageAdmin";
 import LoginPage from './pages/LoginPage/LoginPage';
+import AceptacionSupervisor from './SupervisorRespuesta/AceptacionSupervisor';
+import RechazoSupervisor from './SupervisorRespuesta/RechazoSupervisor';
+
 
 
 //Función principal
@@ -14,6 +17,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [role, setRole] = useState('');
   const [redirect, setRedirect] = useState(null);
+  const [showNavBar, setShowNavBar] = useState(true);
 
   useEffect(() => {
     // Llamar a la función get_user para obtener el nombre de usuario
@@ -60,8 +64,9 @@ function App() {
   };
 
   return (
+
     <Router>
-      <nav className="navbar">
+      {showNavBar && <nav className="navbar">
         <h1 className='navheader'>Pasantías UAI</h1>
         <li className="welcome-message">
           {username && <span>Bienvenido, {username}</span>}
@@ -80,12 +85,17 @@ function App() {
             </li>
           )}
         </ul>
-      </nav>
+      </nav>}
       <Routes>
         <Route path="/" element={redirect ? <Navigate to={redirect} /> : <LoginPage />} /> {/* Ruta por defecto */}
         <Route path="/alumno" element={<HomePageAlumno />} />
         <Route path="/admin" element={<HomePageAdmin />} />
-      </Routes>
+        <Route path = "/aceptar/:ID_Respuesta" element = {<AceptacionSupervisor setShowNavBar = {setShowNavBar}/>}
+        />
+        <Route path = "/rechazo/:ID_Respuesta" element = {<RechazoSupervisor setShowNavBar = {setShowNavBar}/>}
+        />
+
+      </Routes> 
     </Router>
   );
 }
