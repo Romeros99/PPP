@@ -54,6 +54,12 @@ CREATE TABLE Detalle_Pasantia(
     PRIMARY KEY (ID_Pasantia)
 );
 
+CREATE TABLE Respuesta_Supervisor(
+	ID_Respuesta SMALLINT NOT NULL IDENTITY(1, 1),
+	RUN_Alumno VARCHAR(12),
+	Tramitado BIT,
+	Respuesta VARCHAR(9)
+)
 --Inserción de primeros registros de prueba
 INSERT INTO Reglamentos(RUN_Alumno, ID_Version, Fecha)
 VALUES
