@@ -39,8 +39,8 @@ const Table = ({theadData, tbodyData}) => {
   }
   //Despliega la tabla y abre el modal cuando se apreta un alumno
   return (
-    <div>
-      <table>
+    <div className="table-container">
+      <table className="table">
         <thead>
           <tr>
             {theadData.map(heading => {
