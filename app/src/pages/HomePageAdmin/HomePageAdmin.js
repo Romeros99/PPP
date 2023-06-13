@@ -1,18 +1,21 @@
 import './HomePageAdmin.css';
 import React, { useState, useEffect} from 'react';
 import Table from '../../Table/Table.js'
-import { Button } from 'reactstrap';
+import TablePaso3 from '../../TablePaso3/TablePaso3.js'
 import FormPaso3 from '../../FormPaso3/FormPaso3';
+import { Button } from 'reactstrap';
 
 function HomePageAdmin() {
   //Se utiliza useState para almacenar en un array los alumnos que están en estado pendiente
   const [returnedRUNs, setReturnedRUNs] = useState(['']);
   const [returnedData, setReturnedData] = useState(['']);
+  //Las variables active y active2, activan las tablas que se abren y cierran al presionar los botones de Buscar Alumnos Pendientes o Buscar Pasantías Pendientes, respectivamente
   const [active, setActive] = useState(false);
+  const [active2, setActive2] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [datos, setDatos] = useState({RUN_Alumno: '20.358.429-6', RUN_Empresas: '90.286.000-2', Nombre: 'Brititsh American Tobacco Chile Operaciones S.A.',
-    Calle_Direccion: 'Fundo La Rotunda Ruta 68', Numero_Direccion: 0, Comuna_Direccion: 'Casablanca',
-    Ciudad_Direccion: 'Casablanca', Rubro: 'Industrias Manufactureras de Tabaco',Nombres: 'Alejandro', Apellidos: 'Romero', Mail: 'aleromeros1999@gmail.com'})
+  //ReturnedDataPasantia y datos almacenan el arreglo de pasantias pendientes y los datos de la fila seleccionada por el administrador, respectivamente
+  const [returnedDataPasantias, setReturnedDataPasantias] = useState([''])
+  const [datos, setDatos] = useState({})
   const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: '', RUN_Alumno: '20.358.429-6', Tramitado: 0, Respuesta: null});
   const [showBoton, setShowBoton] = useState(false);
   const [idRespuestaSupervisor, setidRespuestaSupervisor] = useState(0);
@@ -21,7 +24,6 @@ function HomePageAdmin() {
   }, []);
   
   useEffect(() => {}, [returnedData]);
-
 
   const crearRespuestaSupervisor = async () => {
     try {
@@ -52,8 +54,7 @@ function HomePageAdmin() {
     } catch (error){
         alert('ERROR: Error en el intento de agregar el supervisor.')
     }
-};
-
+  };
 
   //obtiene nombres de las columnas de table.js
   const getHeadings = (returnedData) => {
@@ -99,15 +100,15 @@ function HomePageAdmin() {
     }
   };
 
+  //Función ejecutada al apretar el botón de buscar alumnos pendientes que consigue los RUNs y, en caso de haber más de uno, activa la vista de la tabla y busca los datos de los alumnos
   const funcFetchData = () => {
     fetchRUNs();
-    if(returnedRUNs.length >= 1){
-      setActive(true);
-      fetchData();
-    }else{
+    if(returnedRUNs.length == 0){
       setActive(false);
-    }
-    
+    }else{
+      fetchData();
+      setActive(!active);
+    }  
   }
 
   function MyButton({ idRespuestaSupervisor }) {
@@ -119,6 +120,7 @@ function HomePageAdmin() {
       <button onClick={handleClick}>Aceptar (supervisor acepta en mail)</button>
     );
   }
+  
   function MyButtonRechazar({ idRespuestaSupervisor }) {
     const handleClick = () => {
       const url = `/rechazo/${idRespuestaSupervisor}`;
@@ -128,23 +130,38 @@ function HomePageAdmin() {
       <button onClick={handleClick}>Rechazar (supervisor rechaza en mail)</button>
     );
   }
+
+  //Función DUMMY de fetchPasantias
+  const funcFetchDataPasantias = () => {
+    setReturnedDataPasantias([
+      {RUN_Alumno: '20.358.429-6', RUN_Empresas: '90.286.000-2', Nombre: 'Brititsh American Tobacco Chile Operaciones S.A.',
+      Calle_Direccion: 'Fundo La Rotunda Ruta 68', Numero_Direccion: 0, Comuna_Direccion: 'Casablanca',
+      Ciudad_Direccion: 'Casablanca', Rubro: 'Industrias Manufactureras de Tabaco',Nombres: 'Alejandro', Apellidos: 'Romero', Mail: 'aleromeros1999@gmail.com'},
+      {RUN_Alumno: '19.436.418-0', RUN_Empresas: '90.286.000-2', Nombre: 'Brititsh American Tobacco Chile Operaciones S.A.',
+      Calle_Direccion: 'Fundo La Rotunda Ruta 69', Numero_Direccion: 0, Comuna_Direccion: 'Casablanca',
+      Ciudad_Direccion: 'Casablanca', Rubro: 'Industrias Manufactureras de Tabaco',Nombres: 'Alejandro', Apellidos: 'Romero', Mail: 'aleromeros1999@gmail.com'}
+    ]);
+    setActive2(!active2);
+  }
+
   return (
     <div>
-    <div className = 'App'>
-      <Button onClick = {() => funcFetchData()}>Buscar Alumnos Pendientes</Button>
-      {active && <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>}
-      <br></br>
-      <Button onClick = {() => setShowForm(true)}>Mostrar (dummy de tabla)</Button>
-      <br></br>
-      <FormPaso3 setShowModal = {setShowForm} showModal = {showForm} datos={datos} setDatos = {setDatos}></FormPaso3>
-      <button onClick={crearRespuestaSupervisor}>abrir (dummy de enviar mail)</button>
-      {showBoton && (
-      <div>
-      <br></br>
-      <MyButton idRespuestaSupervisor = {idRespuestaSupervisor}></MyButton>
-      <MyButtonRechazar idRespuestaSupervisor = {idRespuestaSupervisor}></MyButtonRechazar>
-      </div>)}
-    </div>
+      <div className = 'App'>
+        <Button onClick = {() => funcFetchData()} style={{ backgroundColor: active ? '#0091ff' : '#6c757d' }}>{active ? 'Cerrar Tabla de Alumnos': 'Buscar Alumnos Pendientes'}</Button>
+        {active && <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>}
+        <br></br>
+        <Button onClick = {() => funcFetchDataPasantias()} style={{ backgroundColor: active2 ? '#0091ff' : '#6c757d' }}>{active2 ? 'Cerrar Tabla de Pasantías': 'Buscar Pasantías Pendientes'}</Button>
+        {active2 && <TablePaso3 theadData = {getHeadings(returnedDataPasantias)} tbodyData = {returnedDataPasantias} setDatos = {setDatos} setShowForm = {setShowForm}/>}
+        <br></br>
+        <FormPaso3 setShowModal = {setShowForm} showModal = {showForm} datos = {datos} setDatos = {setDatos}></FormPaso3>
+        <button onClick={crearRespuestaSupervisor}>abrir (dummy de enviar mail)</button>
+        {showBoton && (
+        <div>
+          <br></br>
+          <MyButton idRespuestaSupervisor = {idRespuestaSupervisor}></MyButton>
+          <MyButtonRechazar idRespuestaSupervisor = {idRespuestaSupervisor}></MyButtonRechazar>
+        </div>)}
+      </div>
     </div>
   )
 }
