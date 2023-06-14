@@ -317,6 +317,7 @@ const aceptarRespuesta = async (ID_Respuesta) => {
     throw error;
   }
 };
+
 const rechazarRespuesta = async (ID_Respuesta) => {
   try {
     const pool = await sql.connect(config);
@@ -346,8 +347,28 @@ const rechazarRespuesta = async (ID_Respuesta) => {
   }
 };
 
+//Función que retorna todas las pasantías que estén en estado Pendiente de Verificación de Requisitos (Aquellos que hayan ingresado los datos de sus pasantías pero que todavía no se confirman por dirección académica o por supervisor).
+const getPasantiasPendientes = async() => {
+  try {
+    const pool = await sql.connect(config);
+    const PasantiasPendientes = await pool.request()
+    .query(`SELECT DP.RUN_Alumno, E.RUN_Empresas, E.Nombre, E.Calle_Direccion, E.Numero_Direccion, E.Comuna_Direccion, E.Ciudad_Direccion, 
+              E.Rubro, S.Nombres, S.Apellidos, S.Mail FROM Detalle_Pasantia AS DP 
+              RIGHT JOIN Empresas AS E ON DP.RUN_Empresas = E.RUN_Empresas
+              RIGHT JOIN Supervisores AS S ON DP.ID_Supervisor = S.ID_Supervisor
+              WHERE DP.Paso_Actual = 2.5;`);
+
+    return PasantiasPendientes;
+  }
+  catch(error) {
+    console.log(error);
+    return error;
+  }
+};
+
 module.exports = {
   getRUNsPendientes,
+  getPasantiasPendientes,
   crearReglamento,
   crearPasantia,
   removeReglamento,

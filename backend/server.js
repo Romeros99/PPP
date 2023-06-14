@@ -63,10 +63,17 @@ app.get('/api/bd/empresas', async(req, res) => {
 });
 
 //request de traer RUNs de alumnos en estado pendiente
-app.get('/api/bd/pendientes', async(req, res) => {
+app.get('/api/bd/pendientes/RUNs', async(req, res) => {
   const result = await db_operation.getRUNsPendientes();
   res.send(result.recordset);
 });
+
+//request de traer información de pasantías en estado pendiente
+app.get('/api/bd/pendientes/pasantias', async(req, res) => {
+  const result = await db_operation.getPasantiasPendientes();
+  res.send(result.recordset);
+});
+
 
 //request para llevar el paso actual del alumno al frontend 
 app.get('/api/bd/pasoactual', async(req, res) => {
