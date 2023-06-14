@@ -63,7 +63,7 @@ function HomePageAdmin() {
 
   //Función que conecta con el API para obtener los RUNs de alumnos en estado pendiente mediante un GET Request.
   const fetchRUNs = async () => {
-    const newData = await fetch('/api/bd/pendientes', {
+    const newData = await fetch('/api/bd/pendientes/RUNs', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -131,16 +131,33 @@ function HomePageAdmin() {
     );
   }
 
-  //Función DUMMY de fetchPasantias
+  //Función que conecta con Backend para obtener la información de Pasantías en estado pendiente mediante un GET Request.
+  const fetchDataPasantias = async () => {
+    try {
+      const res = await fetch('/api/bd/pendientes/pasantias', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+        
+      const data = await res.json();
+      
+      if (data.error) {
+        alert(data.error);
+      } else {
+      //Se almacenan toda la información de los alumnos retornados (json) en un returnedDataPasantias 
+        setReturnedDataPasantias([...data]);
+      }
+    } catch (error){
+      alert('ERROR: Error en la búsqueda de alumnos pendientes.')
+    }
+  };
+
+  //Función encargada de obtener los datos de las pasantías pendientes (RUN Alumno, Info de Pasantías e Info de Supervisor)
   const funcFetchDataPasantias = () => {
-    setReturnedDataPasantias([
-      {RUN_Alumno: '20.358.429-6', RUN_Empresas: '90.286.000-2', Nombre: 'Brititsh American Tobacco Chile Operaciones S.A.',
-      Calle_Direccion: 'Fundo La Rotunda Ruta 68', Numero_Direccion: 0, Comuna_Direccion: 'Casablanca',
-      Ciudad_Direccion: 'Casablanca', Rubro: 'Industrias Manufactureras de Tabaco',Nombres: 'Alejandro', Apellidos: 'Romero', Mail: 'aleromeros1999@gmail.com'},
-      {RUN_Alumno: '19.436.418-0', RUN_Empresas: '90.286.000-2', Nombre: 'Brititsh American Tobacco Chile Operaciones S.A.',
-      Calle_Direccion: 'Fundo La Rotunda Ruta 69', Numero_Direccion: 0, Comuna_Direccion: 'Casablanca',
-      Ciudad_Direccion: 'Casablanca', Rubro: 'Industrias Manufactureras de Tabaco',Nombres: 'Alejandro', Apellidos: 'Romero', Mail: 'aleromeros1999@gmail.com'}
-    ]);
+    fetchDataPasantias();
     setActive2(!active2);
   }
 
