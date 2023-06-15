@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import './HomePageAlumno.css';
 import Formulario from '../../Formulario/Formulario.js'
 import FormEmpresa from '../../FormEmpresa/FormEmpresa';
+import FormProyecto from '../../FormProyecto/FormProyecto'
 import React, { useState, useEffect } from 'react';
 import {Button} from 'reactstrap';
 
@@ -75,6 +76,10 @@ const HomePageAlumno = () => {
       case 2.5:
         return (
           <p>Se ha enviado la información de la empresa y supervisor correctamente, porfavor espere a una respuesta del administrador para continuar con el paso 3</p>
+        )
+      case 5:
+        return(
+          <FormProyecto/>
         )
     }
   };
