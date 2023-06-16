@@ -126,8 +126,18 @@ app.post('/api/bd/crear/supervisor', async(req, res) => {
 });
 
 app.post('/api/bd/cambiarDetalle', async(req, res) => {
-  const { RUN_Empresas,ID_Supervisor,RUN_Alumno } = req.body;
-  await db_operation.cambiarDetallePasantia(RUN_Empresas, ID_Supervisor, RUN_Alumno,res);
+  const { RUN_Empresas, ID_Supervisor, RUN_Alumno } = req.body;
+  await db_operation.cambiarDetallePasantia(RUN_Empresas, ID_Supervisor, RUN_Alumno, res);
+});
+
+//request para cambiar datos de la empresa
+app.post('/api/bd/cambiar/empresa', async(req, res) => {
+  await db_operation.cambiarInformacionEmpresa(req.body, res);
+});
+
+//request para cambiar datos del supervisor
+app.post('/api/bd/cambiar/supervisor', async(req, res) => {
+  await db_operation.cambiarInformacionSupervisor(req.body, res);
 });
 
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));

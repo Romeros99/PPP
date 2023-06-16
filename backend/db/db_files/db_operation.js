@@ -211,7 +211,6 @@ const crearEmpresa = async(Empresa, res) => {
 
 const crearSupervisor = async(Supervisor, res) => {
   try {
-
     //Verifica que los campos del alumno no estén vacíos y, en caso de ser vacíos, envía un error como respuesta al Frontend.
     if (Supervisor.Nombres.length === 0){
       res.status(400).json({ error: 'ERROR: Por favor ingrese un nombre.' });
@@ -256,7 +255,7 @@ const crearSupervisor = async(Supervisor, res) => {
   }
 }
 
-const cambiarDetallePasantia = async (RUN_Empresas, ID_Supervisor, RUN_Alumno,res) => {
+const cambiarDetallePasantia = async (RUN_Empresas, ID_Supervisor, RUN_Alumno, res) => {
   try {
     const pool = await sql.connect(config);
     const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = '${RUN_Empresas}', ID_Supervisor = '${ID_Supervisor}' WHERE RUN_Alumno = '${RUN_Alumno}'`);
@@ -270,6 +269,39 @@ const cambiarDetallePasantia = async (RUN_Empresas, ID_Supervisor, RUN_Alumno,re
   }
 };
 
+//Función para realizar un update del detalle de la empresa
+const cambiarInformacionEmpresa = async (Empresa, res) => {
+  try {
+    const pool = await sql.connect(config);
+    await pool.request().query(`UPDATE Empresas 
+                                SET RUN_Empresas = '${Empresa.RUN_Empresas}', Nombre = '${Empresa.Nombre}', Calle_Direccion = '${Empresa.Calle_Direccion}', Numero_Direccion = ${Empresa.Numero_Direccion}, 
+                                Comuna_Direccion = '${Empresa.Comuna_Direccion}', Ciudad_Direccion = '${Empresa.Ciudad_Direccion}', Rubro = '${Empresa.Rubro}' 
+                                WHERE RUN_Empresas = '${Empresa.RUN_Empresa_Inicial}'`);
+    
+    res.status(201).json({ message: 'Información actualizada correctamente.' });
+    return;   
+  } catch (error) {
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+};
+
+//Función para realizar un update del detalle del supervisor
+const cambiarInformacionSupervisor = async (Supervisor, res) => {
+  try {
+    const pool = await sql.connect(config);
+    await pool.request().query(`UPDATE Supervisores
+                                SET Nombres = '${Supervisor.Nombres}', Apellidos = '${Supervisor.Apellidos}', Mail = '${Supervisor.Mail}'
+                                WHERE ID_Supervisor = ${Supervisor.ID_Supervisor}`);
+    
+    res.status(201).json({ message: 'Información actualizada correctamente.' });
+    return;   
+  } catch (error) {
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+};
+
 const crearRespuesta = async (RUN_Alumno, res) =>{
   try{
     const pool = await sql.connect(config);
@@ -278,7 +310,6 @@ const crearRespuesta = async (RUN_Alumno, res) =>{
     const insertRespuesta = await pool.request().query(`INSERT INTO Respuesta_Supervisor (RUN_Alumno, Tramitado, Respuesta) OUTPUT inserted.ID_Respuesta VALUES
       ('${(RUN_Alumno)}', 0, NULL)`);
       const lastID = insertRespuesta.recordset[0].ID_Respuesta;
-      //console.log(`http://localhost:3000/aceptado/${ID_Respuesta}`, `http://localhost:3000/rechazado/${ID_Respuesta}`)
       res.status(201).json({ message: 'Respuesta de supervisor creada correctamente.', lastID: lastID});
     return;
   } catch (error){
@@ -353,7 +384,7 @@ const getPasantiasPendientes = async() => {
     const pool = await sql.connect(config);
     const PasantiasPendientes = await pool.request()
     .query(`SELECT DP.RUN_Alumno, E.RUN_Empresas, E.Nombre, E.Calle_Direccion, E.Numero_Direccion, E.Comuna_Direccion, E.Ciudad_Direccion, 
-              E.Rubro, S.Nombres, S.Apellidos, S.Mail FROM Detalle_Pasantia AS DP 
+              E.Rubro, S.ID_Supervisor, S.Nombres, S.Apellidos, S.Mail FROM Detalle_Pasantia AS DP 
               RIGHT JOIN Empresas AS E ON DP.RUN_Empresas = E.RUN_Empresas
               RIGHT JOIN Supervisores AS S ON DP.ID_Supervisor = S.ID_Supervisor
               WHERE DP.Paso_Actual = 2.5;`);
@@ -378,6 +409,8 @@ module.exports = {
   getPasoActual,
   cambiarPasoActual,
   cambiarDetallePasantia,
+  cambiarInformacionEmpresa,
+  cambiarInformacionSupervisor,
   crearRespuesta,
   aceptarRespuesta,
   rechazarRespuesta
