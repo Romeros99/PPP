@@ -19,6 +19,7 @@ function HomePageAdmin() {
   const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: '', RUN_Alumno: '20.358.429-6', Tramitado: 0, Respuesta: null});
   const [showBoton, setShowBoton] = useState(false);
   const [idRespuestaSupervisor, setidRespuestaSupervisor] = useState(0);
+  
   useEffect(() => {
     fetchRUNs();
   }, []);
@@ -147,11 +148,11 @@ function HomePageAdmin() {
       if (data.error) {
         alert(data.error);
       } else {
-      //Se almacenan toda la información de los alumnos retornados (json) en un returnedDataPasantias 
+      //Se almacenan toda la información de las pasantías retornados (json) en un returnedDataPasantias 
         setReturnedDataPasantias([...data]);
       }
     } catch (error){
-      alert('ERROR: Error en la búsqueda de alumnos pendientes.')
+      alert('ERROR: Error en la búsqueda de pasantías pendientes.')
     }
   };
 
@@ -159,7 +160,7 @@ function HomePageAdmin() {
   const funcFetchDataPasantias = () => {
     fetchDataPasantias();
     setActive2(!active2);
-  }
+  };
 
   return (
     <div>
@@ -168,7 +169,7 @@ function HomePageAdmin() {
         {active && <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>}
         <br></br>
         <Button onClick = {() => funcFetchDataPasantias()} style={{ backgroundColor: active2 ? '#0091ff' : '#6c757d' }}>{active2 ? 'Cerrar Tabla de Pasantías': 'Buscar Pasantías Pendientes'}</Button>
-        {active2 && <TablePaso3 theadData = {getHeadings(returnedDataPasantias)} tbodyData = {returnedDataPasantias} setDatos = {setDatos} setShowForm = {setShowForm}/>}
+        {active2 && <TablePaso3 theadData = {getHeadings(returnedDataPasantias)} tbodyData = {returnedDataPasantias} datos = {datos} setDatos = {setDatos} setShowForm = {setShowForm}/>}
         <br></br>
         <FormPaso3 setShowModal = {setShowForm} showModal = {showForm} datos = {datos} setDatos = {setDatos}></FormPaso3>
         <button onClick={crearRespuestaSupervisor}>abrir (dummy de enviar mail)</button>
