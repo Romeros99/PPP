@@ -5,33 +5,115 @@ import './FormPaso3.css';
 const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
     const [showRechazo, setShowRechazo] = useState(false);
     const [visible, setVisible] = useState(false);
+    //Almacena si se realizó o no algún cambio en los detalles de la empresa o del supervisor
+    const [cambiosRealizados, setCambiosRealizados] = useState(false);
 
-      const handleInputChange = (e) => {
-          const { name, value } = e.target;
-          setDatos(prevState => ({
-            ...prevState,
-            [name]: value
-          }));
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        //Se setea que se realizaron cambios
+        setCambiosRealizados(true);
+        //Se almacena como entero si es un numero de direccion y como string si es otro campo
+        if (name === "Numero_Direccion"){
+            setDatos(prevState => ({
+                ...prevState,
+                [name]: parseInt(value)
+            }));
+        }
+        else{
+            setDatos(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
+        }
+    };
+    
+    //Post requests para hacer los updates de los detalles de la empresa, del supervisor y del detalle_pasantia
+    const sendChangesAceptar = async () => {
+        try {
+            const res = await fetch('/api/bd/cambiar/empresa', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({...datos})
+              
+            });
+            const data = await res.json();
+      
+            if (data.error) {
+              alert(data.error);
+            }
+          } catch (error) {
+            alert('ERROR: Error en la actualizacion del paso.');
         };
+        try {
+            const res = await fetch('/api/bd/cambiar/supervisor', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({...datos})
+              
+            });
+            const data = await res.json();
+      
+            if (data.error) {
+              alert(data.error);
+            }
+          } catch (error) {
+            alert('ERROR: Error en la actualizacion del paso.');
+        };
+        try {
+            const res = await fetch('/api/bd/cambiarDetalle', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                        RUN_Empresas : datos.RUN_Empresas,
+                        ID_Supervisor : datos.ID_Supervisor,
+                        RUN_Alumno : datos.RUN_Alumno
+                    })
+            });
+            const data = await res.json();
+            
+            if (data.error) {
+              alert(data.error);
+            }
+        } catch (error) {
+            alert('ERROR: Error en la actualizacion del paso.');
+        };
+    };
+
+    //Se realizan los cambios de update en la base de datos si se realizó algún cambio en la infomación de la empresa o del supervisor, por parte del administrador
     const handleAceptar = () => {
         setShowModal(false);
-        console.log(datos);
-    }
+        if (cambiosRealizados === true){
+            sendChangesAceptar();
+        };
+        setCambiosRealizados(false);
+        return;
+    };
+
     const handleRechazar = () => {
         setShowRechazo(true);
-    }
+    };
 
     const handleBorrar = () =>{
         setShowRechazo(false);
         setShowModal(false);
         setVisible(true);
-    }
+    };
 
     const handleMantener = () =>{
         setShowRechazo(false);
         setShowModal(false);
         setVisible(true);
-    }
+    };
+
     return(
         <div>
         <div>
@@ -129,7 +211,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
                             <Input
                                 id="Numero_Direccion"
                                 name="Numero_Direccion"
-                                type="text"
+                                type="number"
                                 value = {datos.Numero_Direccion}
                                 onChange = {handleInputChange}
                             />
