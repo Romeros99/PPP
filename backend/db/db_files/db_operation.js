@@ -207,7 +207,7 @@ const crearEmpresa = async(Empresa, res) => {
     res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
     return error;
   }
-}
+};
 
 const crearSupervisor = async(Supervisor, res) => {
   try {
@@ -255,10 +255,22 @@ const crearSupervisor = async(Supervisor, res) => {
   }
 }
 
+//Función para cambiar el detalle de pasantía.
 const cambiarDetallePasantia = async (RUN_Empresas, ID_Supervisor, RUN_Alumno, res) => {
   try {
     const pool = await sql.connect(config);
-    const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = '${RUN_Empresas}', ID_Supervisor = '${ID_Supervisor}' WHERE RUN_Alumno = '${RUN_Alumno}'`);
+    if (RUN_Empresas !== 'NULL' && ID_Supervisor !== 'NULL'){
+      const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = '${RUN_Empresas}', ID_Supervisor = '${ID_Supervisor}' WHERE RUN_Alumno = '${RUN_Alumno}'`);
+    };
+    if (RUN_Empresas === 'NULL' && ID_Supervisor !== 'NULL'){
+      const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = ${RUN_Empresas}, ID_Supervisor = '${ID_Supervisor}' WHERE RUN_Alumno = '${RUN_Alumno}'`);
+    };
+    if (RUN_Empresas !== 'NULL' && ID_Supervisor === 'NULL'){
+      const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = '${RUN_Empresas}', ID_Supervisor = ${ID_Supervisor} WHERE RUN_Alumno = '${RUN_Alumno}'`);
+    };
+    if (RUN_Empresas === 'NULL' && ID_Supervisor === 'NULL'){
+      const insertEmpresa = await pool.request().query(`UPDATE Detalle_Pasantia SET RUN_Empresas = ${RUN_Empresas}, ID_Supervisor = ${ID_Supervisor} WHERE RUN_Alumno = '${RUN_Alumno}'`);
+    };
     res.status(201).json({ message: 'Detalle pasantia actualizado correctamente.' });
     return;
     
@@ -397,21 +409,39 @@ const getPasantiasPendientes = async() => {
   }
 };
 
+//Función para eliminar un registro de supervisor utilizando el RUT del alumno como método de filtración.
+const removeSupervisor = async(Supervisor, res) => {
+  try {
+    const pool = await sql.connect(config);
+    await pool.request()
+    .query(`DELETE FROM Supervisores
+            WHERE ID_Supervisor = ${Supervisor.ID_Supervisor}`);
+    
+    res.status(201).json({ message: 'Supervisor eliminado exitosamente.' });
+    return;
+  }
+  catch(error) {
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+};
+
 module.exports = {
   getRUNsPendientes,
   getPasantiasPendientes,
+  getEmpresas,
+  getPasoActual,
   crearReglamento,
   crearPasantia,
-  removeReglamento,
-  getEmpresas,
   crearEmpresa,
   crearSupervisor,
-  getPasoActual,
+  crearRespuesta,
   cambiarPasoActual,
   cambiarDetallePasantia,
   cambiarInformacionEmpresa,
   cambiarInformacionSupervisor,
-  crearRespuesta,
+  removeReglamento,
+  removeSupervisor,
   aceptarRespuesta,
   rechazarRespuesta
 }
