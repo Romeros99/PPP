@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { Button, Form, Label, Input, Row,Col, ModalBody, Modal, ModalHeader, ModalFooter, Alert } from 'reactstrap';
 import './FormPaso3.css';
+import FuncionPaso from '../FuncionPaso/FuncionPaso';
 
 const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
     const [showRechazo, setShowRechazo] = useState(false);
@@ -45,7 +46,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
               alert(data.error);
             }
           } catch (error) {
-            alert('ERROR: Error en la actualizacion del paso.');
+            alert('ERROR: Error en la actualizacion de la empresa.');
         };
         try {
             const res = await fetch('/api/bd/cambiar/supervisor', {
@@ -63,7 +64,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
               alert(data.error);
             }
           } catch (error) {
-            alert('ERROR: Error en la actualizacion del paso.');
+            alert('ERROR: Error en la actualizacion del supervisor.');
         };
         try {
             const res = await fetch('/api/bd/cambiarDetalle', {
@@ -84,7 +85,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
               alert(data.error);
             }
         } catch (error) {
-            alert('ERROR: Error en la actualizacion del paso.');
+            alert('ERROR: Error en la actualizacion del detalle de pasantía.');
         };
     };
 
@@ -94,11 +95,64 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
         if (cambiosRealizados === true){
             sendChangesAceptar();
         };
+        try {
+            FuncionPaso(3.5, datos.RUN_Alumno);
+        } catch (error) {
+            alert('ERROR: Error en la actualizacion del paso.')
+        };
         setCambiosRealizados(false);
         return;
     };
 
+    const sendRemoveSupervisor = async() => {
+        try {
+            const res = await fetch('/api/bd/remove/supervisor', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({ID_Supervisor: datos.ID_Supervisor})
+              
+            });
+            const data = await res.json();
+      
+            if (data.error) {
+              alert(data.error);
+            }
+          } catch (error) {
+            alert('ERROR: Error en la eliminación del supervisor.');
+        };
+        try {
+            const res = await fetch('/api/bd/cambiarDetalle', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                        RUN_Empresas : 'NULL',
+                        ID_Supervisor : 'NULL',
+                        RUN_Alumno : datos.RUN_Alumno
+                    })
+            });
+            const data = await res.json();
+            
+            if (data.error) {
+              alert(data.error);
+            }
+        } catch (error) {
+            alert('ERROR: Error en la actualizacion del detalle de pasantía.');
+        };
+        try {
+            FuncionPaso(2.0, datos.RUN_Alumno);
+        } catch (error) {
+            alert('ERROR: Error en la actualizacion del paso.')
+        };
+    };
+
     const handleRechazar = () => {
+        sendRemoveSupervisor();
         setShowRechazo(true);
     };
 
