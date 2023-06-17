@@ -6,15 +6,25 @@
   text-align: center;
 }
 
-.navbar a {
-  color: white;
+.navbar {
+  background-color: rgb(29, 30, 32); /* Reemplaza "#f00" por el color que desees */
+  /* Otros estilos personalizados */
 }
 
 .navheader {
+  font-family:Arial, Helvetica, sans-serif;
   color: white;
   font-size: 25px;
   margin-top: 10px;
   margin-left: 10px;
+}
+
+.logo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 100px;
+  height: auto;
 }
 
 
@@ -36,3 +46,4 @@ border-color: white; /* Agrega un borde blanco cuando el cursor pasa sobre el bo
   height: 2rem;
   margin-right: 1rem;
 }
+

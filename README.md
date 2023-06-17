@@ -1,7 +1,7 @@
 Para la correcta ejecución de la aplicación, es necesario instalar las siguientes dependencias:
 Dentro de ./app:
 
-npm i react nodemon react-bootstrap reactstrap bootstrap react-router-dom eslint @mui/material @emotion/react @emotion/styled
+npm i react nodemon react-bootstrap reactstrap bootstrap react-router-dom eslint @mui/material @emotion/react @emotion/styled @mui/icons-material
 
 Dentro de ./backend:
 
