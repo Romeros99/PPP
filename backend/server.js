@@ -140,4 +140,9 @@ app.post('/api/bd/cambiar/supervisor', async(req, res) => {
   await db_operation.cambiarInformacionSupervisor(req.body, res);
 });
 
+//request de eliminar supervisor
+app.post('/api/bd/remove/supervisor', async(req, res) => {
+  await db_operation.removeSupervisor(req.body, res);
+});
+
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));
