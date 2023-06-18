@@ -40,7 +40,7 @@ const LoginPage = () => {
       });
       const data = await response.json()
       console.log(data.message);
-      if (data.message=='valid_credentials') {
+      if (data.message==='valid_credentials') {
         
         window.location.href = "/alumno";
       } else {
@@ -68,7 +68,7 @@ const LoginPage = () => {
       });
       const data = await response.json()
       console.log(data.message);
-      if (data.message=='valid_credentials') {
+      if (data.message==='valid_credentials') {
         
         window.location.href = "/admin";
       } else {

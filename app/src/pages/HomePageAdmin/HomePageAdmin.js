@@ -7,14 +7,14 @@ import { Button } from 'reactstrap';
 
 function HomePageAdmin() {
   //Se utiliza useState para almacenar en un array los alumnos que están en estado pendiente
-  const [returnedRUNs, setReturnedRUNs] = useState(['']);
+  const [returnedRUNs, setReturnedRUNs] = useState([]);
   const [returnedData, setReturnedData] = useState(['']);
   //Las variables active y active2, activan las tablas que se abren y cierran al presionar los botones de Buscar Alumnos Pendientes o Buscar Pasantías Pendientes, respectivamente
   const [active, setActive] = useState(false);
   const [active2, setActive2] = useState(false);
   const [showForm, setShowForm] = useState(false);
   //ReturnedDataPasantia y datos almacenan el arreglo de pasantias pendientes y los datos de la fila seleccionada por el administrador, respectivamente
-  const [returnedDataPasantias, setReturnedDataPasantias] = useState([''])
+  const [returnedDataPasantias, setReturnedDataPasantias] = useState([])
   const [datos, setDatos] = useState({})
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function HomePageAdmin() {
   //Función ejecutada al apretar el botón de buscar alumnos pendientes que consigue los RUNs y, en caso de haber más de uno, activa la vista de la tabla y busca los datos de los alumnos
   const funcFetchData = () => {
     fetchRUNs();
-    if(returnedRUNs.length == 0){
+    if(returnedRUNs.length === 0){
       setActive(false);
     }else{
       fetchData();
@@ -95,18 +95,22 @@ function HomePageAdmin() {
       if (data.error) {
         alert(data.error);
       } else {
-      //Se almacenan toda la información de los alumnos retornados (json) en un returnedDataPasantias 
+      //Se almacenan toda la información de las pasantías retornados (json) en un returnedDataPasantias 
         setReturnedDataPasantias([...data]);
       }
     } catch (error){
-      alert('ERROR: Error en la búsqueda de alumnos pendientes.')
+      alert('ERROR: Error en la búsqueda de pasantías pendientes.')
     }
   };
 
   //Función encargada de obtener los datos de las pasantías pendientes (RUN Alumno, Info de Pasantías e Info de Supervisor)
   const funcFetchDataPasantias = () => {
     fetchDataPasantias();
-    setActive2(!active2);
+    if(returnedDataPasantias.length === 0){
+      setActive2(false);
+    }else{
+      setActive2(!active2);
+    }
   }
 
   return (

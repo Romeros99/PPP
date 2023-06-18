@@ -56,7 +56,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
           console.log('id:', respuestaSupervisor.ID_Respuesta);
           mailfunctions.sendMail_admin(
             datos.Mail,
-            respuestaSupervisor.RUN_Alumno,
+            datos.RUN_Alumno,
             respuestaSupervisor.ID_Respuesta
           );
         }
@@ -146,7 +146,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
     const handleAceptar = async () => {
         setShowModal(false);
         if (cambiosRealizados === true) {
-          sendChangesAceptar();
+          await sendChangesAceptar();
         }
     
         try {

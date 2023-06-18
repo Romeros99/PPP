@@ -377,7 +377,7 @@ const rechazarRespuesta = async (ID_Respuesta) => {
       `);
       const insertEmpresa = await pool.request().query(`
         UPDATE Detalle_Pasantia
-        SET Paso_Actual = 2
+        SET Paso_Actual = 2, RUN_Empresas = NULL, ID_Supervisor = NULL
         WHERE RUN_Alumno = '${result.recordset[0].RUN_Alumno}'
       `);
     } else {

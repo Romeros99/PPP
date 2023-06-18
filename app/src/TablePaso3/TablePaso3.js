@@ -3,7 +3,7 @@ import React from 'react';
 import './TablePaso3.css';
 
 //crea un tabla con las filas de la base de dato y largo dinamico segun los registros de alumnos
-const TablePaso3 = ({theadData, tbodyData, datos, setDatos, setShowForm}) => {
+const TablePaso3 = ({theadData, tbodyData, setDatos, setShowForm}) => {
   //Al apretar la fila de la pasantía, guarda los datos en la variable datos de HomePageAlumno
   const funcClick = (row) => {
     setDatos({'RUN_Empresa_Inicial': row.RUN_Empresas,
