@@ -7,14 +7,14 @@ import { Button } from 'reactstrap';
 
 function HomePageAdmin() {
   //Se utiliza useState para almacenar en un array los alumnos que están en estado pendiente
-  const [returnedRUNs, setReturnedRUNs] = useState(['']);
+  const [returnedRUNs, setReturnedRUNs] = useState([]);
   const [returnedData, setReturnedData] = useState(['']);
   //Las variables active y active2, activan las tablas que se abren y cierran al presionar los botones de Buscar Alumnos Pendientes o Buscar Pasantías Pendientes, respectivamente
   const [active, setActive] = useState(false);
   const [active2, setActive2] = useState(false);
   const [showForm, setShowForm] = useState(false);
   //ReturnedDataPasantia y datos almacenan el arreglo de pasantias pendientes y los datos de la fila seleccionada por el administrador, respectivamente
-  const [returnedDataPasantias, setReturnedDataPasantias] = useState([''])
+  const [returnedDataPasantias, setReturnedDataPasantias] = useState([])
   const [datos, setDatos] = useState({})
   const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: '', RUN_Alumno: '20.358.429-6', Tramitado: 0, Respuesta: null});
   const [showBoton, setShowBoton] = useState(false);
@@ -158,10 +158,10 @@ function HomePageAdmin() {
 
   //Función encargada de obtener los datos de las pasantías pendientes (RUN Alumno, Info de Pasantías e Info de Supervisor)
   const funcFetchDataPasantias = () => {
+    fetchDataPasantias();
     if(returnedDataPasantias.length == 0){
       setActive2(false);
     }else{
-      fetchDataPasantias();
       setActive2(!active2);
     }
   };
