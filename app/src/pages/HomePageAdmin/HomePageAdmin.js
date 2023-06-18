@@ -158,8 +158,12 @@ function HomePageAdmin() {
 
   //Función encargada de obtener los datos de las pasantías pendientes (RUN Alumno, Info de Pasantías e Info de Supervisor)
   const funcFetchDataPasantias = () => {
-    fetchDataPasantias();
-    setActive2(!active2);
+    if(returnedDataPasantias.length == 0){
+      setActive2(false);
+    }else{
+      fetchDataPasantias();
+      setActive(!active2);
+    }
   };
 
   return (
