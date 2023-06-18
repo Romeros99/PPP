@@ -16,46 +16,13 @@ function HomePageAdmin() {
   //ReturnedDataPasantia y datos almacenan el arreglo de pasantias pendientes y los datos de la fila seleccionada por el administrador, respectivamente
   const [returnedDataPasantias, setReturnedDataPasantias] = useState([])
   const [datos, setDatos] = useState({})
-  const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: '', RUN_Alumno: '20.358.429-6', Tramitado: 0, Respuesta: null});
-  const [showBoton, setShowBoton] = useState(false);
-  const [idRespuestaSupervisor, setidRespuestaSupervisor] = useState(0);
-  
+
   useEffect(() => {
     fetchRUNs();
   }, []);
   
   useEffect(() => {}, [returnedData]);
 
-  const crearRespuestaSupervisor = async () => {
-    try {
-        const respuesta = await fetch('/api/bd/crear/respuestaSupervisor', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({   
-          ID_Respuesta: respuestaSupervisor.ID_Respuesta,
-          RUN_Alumno: respuestaSupervisor.RUN_Alumno, 
-          Tramitado: respuestaSupervisor.Tramitado, 
-          Respuesta: respuestaSupervisor.Respuesta
-            })
-        })
-        const data = await respuesta.json();
-        console.log("respuesta data: ", JSON.stringify(data));
-        if (data.error) {
-          alert(data.error);
-        }
-        else{
-          const idRespuestaSupervisor = data.lastID;
-          setidRespuestaSupervisor(idRespuestaSupervisor);
-          console.log('ID supervisor: ', idRespuestaSupervisor);
-          setShowBoton(true);
-        }
-    } catch (error){
-        alert('ERROR: Error en el intento de agregar el supervisor.')
-    }
-  };
 
   //obtiene nombres de las columnas de table.js
   const getHeadings = (returnedData) => {
@@ -104,32 +71,12 @@ function HomePageAdmin() {
   //Función ejecutada al apretar el botón de buscar alumnos pendientes que consigue los RUNs y, en caso de haber más de uno, activa la vista de la tabla y busca los datos de los alumnos
   const funcFetchData = () => {
     fetchRUNs();
-    if(returnedRUNs.length == 0){
+    if(returnedRUNs.length === 0){
       setActive(false);
     }else{
       fetchData();
       setActive(!active);
     }  
-  }
-
-  function MyButton({ idRespuestaSupervisor }) {
-    const handleClick = () => {
-      const url = `/aceptar/${idRespuestaSupervisor}`;
-      window.open(url);
-    };
-    return (
-      <button onClick={handleClick}>Aceptar (supervisor acepta en mail)</button>
-    );
-  }
-  
-  function MyButtonRechazar({ idRespuestaSupervisor }) {
-    const handleClick = () => {
-      const url = `/rechazo/${idRespuestaSupervisor}`;
-      window.open(url);
-    };
-    return (
-      <button onClick={handleClick}>Rechazar (supervisor rechaza en mail)</button>
-    );
   }
 
   //Función que conecta con Backend para obtener la información de Pasantías en estado pendiente mediante un GET Request.
@@ -159,12 +106,12 @@ function HomePageAdmin() {
   //Función encargada de obtener los datos de las pasantías pendientes (RUN Alumno, Info de Pasantías e Info de Supervisor)
   const funcFetchDataPasantias = () => {
     fetchDataPasantias();
-    if(returnedDataPasantias.length == 0){
+    if(returnedDataPasantias.length === 0){
       setActive2(false);
     }else{
       setActive2(!active2);
     }
-  };
+  }
 
   return (
     <div>
@@ -173,16 +120,9 @@ function HomePageAdmin() {
         {active && <Table theadData = {getHeadings(returnedData)} tbodyData = {returnedData}/>}
         <br></br>
         <Button onClick = {() => funcFetchDataPasantias()} style={{ backgroundColor: active2 ? '#0091ff' : '#6c757d' }}>{active2 ? 'Cerrar Tabla de Pasantías': 'Buscar Pasantías Pendientes'}</Button>
-        {active2 && <TablePaso3 theadData = {getHeadings(returnedDataPasantias)} tbodyData = {returnedDataPasantias} datos = {datos} setDatos = {setDatos} setShowForm = {setShowForm}/>}
+        {active2 && <TablePaso3 theadData = {getHeadings(returnedDataPasantias)} tbodyData = {returnedDataPasantias} setDatos = {setDatos} setShowForm = {setShowForm}/>}
         <br></br>
         <FormPaso3 setShowModal = {setShowForm} showModal = {showForm} datos = {datos} setDatos = {setDatos}></FormPaso3>
-        <button onClick={crearRespuestaSupervisor}>abrir (dummy de enviar mail)</button>
-        {showBoton && (
-        <div>
-          <br></br>
-          <MyButton idRespuestaSupervisor = {idRespuestaSupervisor}></MyButton>
-          <MyButtonRechazar idRespuestaSupervisor = {idRespuestaSupervisor}></MyButtonRechazar>
-        </div>)}
       </div>
     </div>
   )

@@ -1,13 +1,66 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Form, Label, Input, Row,Col, ModalBody, Modal, ModalHeader, ModalFooter, Alert } from 'reactstrap';
 import './FormPaso3.css';
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
+import mailfunctions from './mailfunctions'; //se traen las funciones con html de mail desde mailfunctions
 
 const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
     const [showRechazo, setShowRechazo] = useState(false);
     const [visible, setVisible] = useState(false);
     //Almacena si se realizó o no algún cambio en los detalles de la empresa o del supervisor
     const [cambiosRealizados, setCambiosRealizados] = useState(false);
+    const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: 0, RUN_Alumno: '', Tramitado: 0, Respuesta: null});
+    const [respuestaCreada, setRespuestaCreada] = useState(false);
+
+
+    const crearRespuestaSupervisor = async () => {
+
+        try {
+            const respuesta = await fetch('/api/bd/crear/respuestaSupervisor', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({   
+              ID_Respuesta: respuestaSupervisor.ID_Respuesta,
+              RUN_Alumno: datos.RUN_Alumno, 
+              Tramitado: respuestaSupervisor.Tramitado, 
+              Respuesta: respuestaSupervisor.Respuesta
+                })
+            })
+            const data = await respuesta.json();
+            console.log("respuesta data: ", JSON.stringify(data));
+            if (data.error) {
+              alert(data.error);
+            }
+            else{
+              const IDRespuesta = data.lastID;
+              console.log('lastID: ', IDRespuesta);
+              setRespuestaSupervisor(prevState => ({
+                ...prevState,
+                ID_Respuesta: IDRespuesta
+              }));
+              setRespuestaCreada(true);
+              
+            }
+        } catch (error){
+            alert('ERROR: Error en el intento de agregar el supervisor.')
+        }
+      };
+
+      useEffect(() => {
+        if (respuestaCreada) {
+          // Realizar acciones adicionales después de que respuestaSupervisor haya sido actualizado
+          console.log("respuesta supervisor: ", respuestaSupervisor);
+          console.log('id:', respuestaSupervisor.ID_Respuesta);
+          mailfunctions.sendMail_admin(
+            datos.Mail,
+            datos.RUN_Alumno,
+            respuestaSupervisor.ID_Respuesta
+          );
+        }
+      }, [respuestaSupervisor, respuestaCreada, datos.Mail]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -90,19 +143,22 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
     };
 
     //Se realizan los cambios de update en la base de datos si se realizó algún cambio en la infomación de la empresa o del supervisor, por parte del administrador
-    const handleAceptar = () => {
+    const handleAceptar = async () => {
         setShowModal(false);
-        if (cambiosRealizados === true){
-            sendChangesAceptar();
-        };
+        if (cambiosRealizados === true) {
+          await sendChangesAceptar();
+        }
+    
         try {
-            FuncionPaso(3.5, datos.RUN_Alumno);
+          FuncionPaso(3.5, datos.RUN_Alumno);
         } catch (error) {
-            alert('ERROR: Error en la actualizacion del paso.')
-        };
+          alert('ERROR: Error en la actualización del paso.');
+        }
+    
         setCambiosRealizados(false);
+        await crearRespuestaSupervisor();
         return;
-    };
+      };
 
     const sendRemoveSupervisor = async() => {
         try {
@@ -154,6 +210,14 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
     const handleRechazar = () => {
         sendRemoveSupervisor();
         setShowRechazo(true);
+        try {
+            FuncionPaso(2.0, datos.RUN_Alumno);
+        } catch (error) {
+            alert('ERROR: Error en la actualizacion del paso.')
+        };
+        mailfunctions.sendMail_alumno("fernandogonz2015@icloud.com");
+        
+
     };
 
     const sendRemoveEmpresa = async() => {
