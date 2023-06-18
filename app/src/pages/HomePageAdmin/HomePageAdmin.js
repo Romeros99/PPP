@@ -162,7 +162,7 @@ function HomePageAdmin() {
       setActive2(false);
     }else{
       fetchDataPasantias();
-      setActive(!active2);
+      setActive2(!active2);
     }
   };
 
