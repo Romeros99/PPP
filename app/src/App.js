@@ -1,33 +1,27 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { Button} from 'reactstrap';
+import { Button } from 'reactstrap';
 import React, { useState, useEffect } from 'react';
-
-//Importa las paginas de alumno y administrador
+import LogoutIcon from '@mui/icons-material/Logout';
 import HomePageAlumno from "./pages/HomePageAlumno/HomePageAlumno";
 import HomePageAdmin from "./pages/HomePageAdmin/HomePageAdmin";
 import LoginPage from './pages/LoginPage/LoginPage';
 import AceptacionSupervisor from './SupervisorRespuesta/AceptacionSupervisor';
 import RechazoSupervisor from './SupervisorRespuesta/RechazoSupervisor';
 
-
-
-//Función principal
 function App() {
   const [username, setUsername] = useState('');
   const [role, setRole] = useState('');
   const [redirect, setRedirect] = useState(null);
   const [showNavBar, setShowNavBar] = useState(true);
+  const [showUsername, setShowUsername] = useState(false); // Nueva variable de estado
 
   useEffect(() => {
-    // Llamar a la función get_user para obtener el nombre de usuario
     getUsername();
   }, []);
 
   const handleLogout = () => {
-    // Eliminar la cookie "access-Token"
     document.cookie = "access-Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    // Redireccionar a la página de inicio de sesión
     window.location.href = "/";
   };
 
@@ -55,6 +49,7 @@ function App() {
         setUsername(data.nombre);
         setRole(data.role);
         checkRolAndRedirect(data.role);
+        setShowUsername(true); // Actualización del estado
       } else {
         console.log('Error al obtener el nombre de usuario');
       }
@@ -64,38 +59,38 @@ function App() {
   };
 
   return (
-
     <Router>
-      {showNavBar && <nav className="navbar">
-        <h1 className='navheader'>Pasantías UAI</h1>
-        <li className="welcome-message">
-          {username && <span>Bienvenido, {username}</span>}
-        </li>
-        <ul>
-          {username && (
-            <li>
-              <Button
-                color="danger"
-                onClick={handleLogout}
-                className="logout-btn"
-                style={{ marginTop: '8px', marginRight: '8px', padding: '3px 6px', fontSize: '14px' }}
-              >
-                Cerrar Sesión
-              </Button>
+      {showNavBar && (
+        <nav className="navbar">
+          <h1 className='navheader'>Pasantías UAI</h1>
+          {showUsername && (
+            <li className="welcome-message">
+              {username && <span>Bienvenido, {username}</span>}
             </li>
           )}
-        </ul>
-      </nav>}
+          <ul>
+            {username && (
+              <li>
+                <Button
+                  color="danger"
+                  onClick={handleLogout}
+                  className="logout-btn"
+                  style={{ marginTop: '8px', marginRight: '8px', padding: '3px 6px', fontSize: '14px' }}
+                >
+                  <LogoutIcon color="white" />Cerrar Sesión
+                </Button>
+              </li>
+            )}
+          </ul>
+        </nav>
+      )}
       <Routes>
-        <Route path="/" element={redirect ? <Navigate to={redirect} /> : <LoginPage />} /> {/* Ruta por defecto */}
+        <Route path="/" element={redirect ? <Navigate to={redirect} /> : <LoginPage />} />
         <Route path="/alumno" element={<HomePageAlumno />} />
         <Route path="/admin" element={<HomePageAdmin />} />
-        <Route path = "/aceptar/:ID_Respuesta" element = {<AceptacionSupervisor setShowNavBar = {setShowNavBar}/>}
-        />
-        <Route path = "/rechazo/:ID_Respuesta" element = {<RechazoSupervisor setShowNavBar = {setShowNavBar}/>}
-        />
-
-      </Routes> 
+        <Route path="/aceptar/:ID_Respuesta" element={<AceptacionSupervisor setShowNavBar={setShowNavBar} />} />
+        <Route path="/rechazo/:ID_Respuesta" element={<RechazoSupervisor setShowNavBar={setShowNavBar} />} />
+      </Routes>
     </Router>
   );
 }

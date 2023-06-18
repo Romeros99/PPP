@@ -1,12 +1,16 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import './LoginPage.css';
 import React, { useState } from 'react';
-import {Button} from 'reactstrap';
+import {Button} from '@mui/material';
+import { Alert } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { TextField } from '@mui/material'
 
 const LoginPage = () => {
   const [userType, setUserType] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const[showcredential_alert, setshowcredential_alert]= useState(false);
   
   const handleUserType = (type) => {
     setUserType(type);
@@ -16,7 +20,10 @@ const LoginPage = () => {
     setUserType('');
     setUsername('');
     setPassword('');
+    setshowcredential_alert(false);
   };
+
+ 
 
   //llama funciones para obtener cookie de sesion de usuario
   const Login_alumno = async (mail, password) =>{
@@ -34,10 +41,10 @@ const LoginPage = () => {
       const data = await response.json()
       console.log(data.message);
       if (data.message=='valid_credentials') {
-        alert("Credenciales validas, bienvenido")
+        
         window.location.href = "/alumno";
       } else {
-        alert("credenciales invalidas")
+        setshowcredential_alert(true);
       }
 
     } catch (error) {
@@ -62,10 +69,10 @@ const LoginPage = () => {
       const data = await response.json()
       console.log(data.message);
       if (data.message=='valid_credentials') {
-        alert("Credenciales validas, bienvenido")
+        
         window.location.href = "/admin";
       } else {
-        alert("credenciales invalidas")
+        setshowcredential_alert(true);
       }
 
     } catch (error) {
@@ -105,32 +112,46 @@ const LoginPage = () => {
     }
     return (
       <div>
-        <Button onClick={handleGoBack} style={{ fontSize: '10px' }}>
-            &larr;
-          </Button>
-        <h2 style = {{textAlign: 'center'}}>Iniciar sesión</h2>
-        <div style = {{textAlign: 'center'}}>
-          <input
+        <Button variant="outlined"
+          onClick={handleGoBack}
+          style={{ fontSize: '10px', textAlign: 'center' }}
+        >
+          <ArrowBackIcon color="primary" />
+          
+        </Button>
+        <h2 style={{ textAlign: 'center', fontSize: '19px', marginBottom: '10%', marginTop: '10px' }}>
+          Iniciar sesión
+        </h2>
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <TextField
             type="text"
-            placeholder={placeholderText}
+            id="outlined-basic"
+            label="Mail UAI"
+            variant="outlined"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            style={{marginBottom: '10px', padding: '5px'}}
-          />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             style={{ marginBottom: '10px', padding: '5px' }}
           />
-        </div >
-        <div style = {{textAlign: 'center'}}>
-        <Button  color = "primary" onClick={handleLogin}>Iniciar sesión</Button>
+          <TextField
+            type="password"
+            id="outlined-basic"
+            label="Contraseña"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ padding: '5px' }}
+          />
         </div>
+        <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>
+          <Button variant="contained" className="loginbtn" color="primary" onClick={handleLogin}>
+            Iniciar sesión
+          </Button>
+        </div>
+        {showcredential_alert && <Alert severity="error">Credenciales de acceso inválidas</Alert>}
       </div>
     );
   };
+  
   
   return (
     
@@ -143,11 +164,11 @@ const LoginPage = () => {
             <div>
                 <h2 style = {{textAlign: 'center', fontSize: '25px', marginBottom: '30px'}}>Tipo de usuario</h2>
                 <div className="button-container">
-                  <Button type="button" color="primary" onClick={() => handleUserType('alumno')}>
+                  <Button variant="contained" color="primary" onClick={() => handleUserType('alumno')}>
                     Alumno
                   </Button>
                   &nbsp;&nbsp;&nbsp;
-                  <Button type="button" color="secondary" onClick={() => handleUserType('administrador')}>
+                  <Button variant="contained" color="secondary" onClick={() => handleUserType('administrador')}>
                     Administrador
                   </Button>
                 </div>

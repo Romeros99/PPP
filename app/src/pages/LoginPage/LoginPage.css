@@ -83,3 +83,19 @@
   .button{
     justify-content: center;
   }
+
+  .loginbtn{
+    margin-bottom: 20%;
+  }
+
+  .logo {
+    width: 40px; /* Ajusta el ancho según tus necesidades */
+    height: 40px; /* Ajusta la altura según tus necesidades */
+    float: right;
+    margin-right: 10px; /* Ajusta el margen según tus necesidades */
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
