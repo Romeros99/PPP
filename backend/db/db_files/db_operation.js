@@ -426,6 +426,24 @@ const removeSupervisor = async(Supervisor, res) => {
   }
 };
 
+
+//Función para eliminar un registro de supervisor utilizando el RUT del alumno como método de filtración.
+const removeEmpresa = async(Empresa, res) => {
+  try {
+    const pool = await sql.connect(config);
+    await pool.request()
+    .query(`DELETE FROM Empresas
+            WHERE RUN_Empresas = '${Empresa.RUN_Empresas}'`);
+    
+    res.status(201).json({ message: 'Empresa eliminada exitosamente.' });
+    return;
+  }
+  catch(error) {
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+};
+
 module.exports = {
   getRUNsPendientes,
   getPasantiasPendientes,
@@ -442,6 +460,7 @@ module.exports = {
   cambiarInformacionSupervisor,
   removeReglamento,
   removeSupervisor,
+  removeEmpresa,
   aceptarRespuesta,
   rechazarRespuesta
 }
