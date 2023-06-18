@@ -156,7 +156,29 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
         setShowRechazo(true);
     };
 
+    const sendRemoveEmpresa = async() => {
+        try {
+            const res = await fetch('/api/bd/remove/empresa', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({RUN_Empresas: datos.RUN_Empresa_Inicial})
+              
+            });
+            const data = await res.json();
+      
+            if (data.error) {
+              alert(data.error);
+            }
+          } catch (error) {
+            alert('ERROR: Error en la eliminación del supervisor.');
+        };
+    };
+
     const handleBorrar = () =>{
+        sendRemoveEmpresa();
         setShowRechazo(false);
         setShowModal(false);
         setVisible(true);
