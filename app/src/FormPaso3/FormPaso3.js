@@ -4,14 +4,13 @@ import './FormPaso3.css';
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
 import mailfunctions from './mailfunctions'; //se traen las funciones con html de mail desde mailfunctions
 
-const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
+const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
     const [showRechazo, setShowRechazo] = useState(false);
     const [visible, setVisible] = useState(false);
     //Almacena si se realizó o no algún cambio en los detalles de la empresa o del supervisor
     const [cambiosRealizados, setCambiosRealizados] = useState(false);
     const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: 0, RUN_Alumno: '', Tramitado: 0, Respuesta: null});
     const [respuestaCreada, setRespuestaCreada] = useState(false);
-
 
     const crearRespuestaSupervisor = async () => {
 
@@ -42,6 +41,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
                 ID_Respuesta: IDRespuesta
               }));
               setRespuestaCreada(true);
+              
               
             }
         } catch (error){
@@ -157,6 +157,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
     
         setCambiosRealizados(false);
         await crearRespuestaSupervisor();
+        setShowModal(false);
         return;
       };
 
@@ -215,7 +216,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
         } catch (error) {
             alert('ERROR: Error en la actualizacion del paso.')
         };
-        mailfunctions.sendMail_alumno("fernandogonz2015@icloud.com");
+        mailfunctions.sendMail_alumno(datos.Mail_Alumno);
         
 
     };
@@ -240,6 +241,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos}) => {
             alert('ERROR: Error en la eliminación del supervisor.');
         };
     };
+    
 
     const handleBorrar = () =>{
         sendRemoveEmpresa();

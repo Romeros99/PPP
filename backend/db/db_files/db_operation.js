@@ -443,7 +443,21 @@ const removeEmpresa = async(Empresa, res) => {
     return error;
   }
 };
-
+const getRUNbyRespuesta = async (ID_Respuesta,res) => {
+  try{
+  const pool = await sql.connect(config)
+  const getRUN = await pool.request().query(`SELECT RUN_Alumno FROM Respuesta_Supervisor 
+  WHERE ID_Respuesta = '${ID_Respuesta}'`);
+  //console.log();
+  res.status(200).json({run_Alumno: getRUN.recordset[0].RUN_Alumno});
+  return;
+  }
+  catch(error) {
+    console.log(error);
+    //res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+}
 module.exports = {
   getRUNsPendientes,
   getPasantiasPendientes,
@@ -462,5 +476,6 @@ module.exports = {
   removeSupervisor,
   removeEmpresa,
   aceptarRespuesta,
-  rechazarRespuesta
+  rechazarRespuesta,
+  getRUNbyRespuesta
 }

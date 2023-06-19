@@ -149,5 +149,10 @@ app.post('/api/bd/remove/supervisor', async(req, res) => {
 app.post('/api/bd/remove/empresa', async(req, res) => {
   await db_operation.removeEmpresa(req.body, res);
 });
+//request para llevar el rut del alumno segun id de la respuesta
+app.get('/api/bd/respuesta/RUN', async(req, res) => {
+  const { ID_Respuesta } = req.query;
+  await db_operation.getRUNbyRespuesta(ID_Respuesta, res);
+});
 
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));

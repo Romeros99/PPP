@@ -1,11 +1,42 @@
 import React, {useLayoutEffect} from 'react';
 import { useParams} from 'react-router-dom';
 import logo from './logo_uai.png';
+import {sendMail_supervisor_rechaza} from '../FormPaso3/mailfunctions';
 
 const RespuestaSupervisor = ({setShowNavBar}) => {
     setShowNavBar(false)
     const { ID_Respuesta } = useParams();
 
+    const getMailAlumno = async (RUN) => {
+      try {
+        const response = await fetch(`/omega/bd/get/mail_alumno?RUN=${RUN}`);
+    
+        if (!response.ok) {
+          throw new Error('Error en la búsqueda del mail del Alumno');
+        }
+        const data = await response.json();
+        const mailAlumno = data.mail_Alumno;
+        sendMail_supervisor_rechaza(mailAlumno);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+  }
+
+    const fetchRunAlumno = async (ID_Respuesta) => {
+      try {
+        const response = await fetch(`/api/bd/respuesta/RUN?ID_Respuesta=${ID_Respuesta}`);
+    
+        if (!response.ok) {
+          throw new Error('Error en la búsqueda del mail del Alumno');
+        }
+        const data = await response.json();
+        const run_Alumno = data.run_Alumno;
+        getMailAlumno(run_Alumno);
+
+      } catch (error) {
+        console.error('Error:', error);
+      }
+  }
     const FuncionAceptarRespuesta = async (ID_Respuesta) => {
       try {
         console.log('ID Supervisor: ', ID_Respuesta);
@@ -25,6 +56,7 @@ const RespuestaSupervisor = ({setShowNavBar}) => {
 
       useLayoutEffect(() => {
       FuncionAceptarRespuesta(ID_Respuesta);
+      fetchRunAlumno(ID_Respuesta);
       
       }, [])
 

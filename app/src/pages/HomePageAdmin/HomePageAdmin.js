@@ -19,6 +19,7 @@ function HomePageAdmin() {
 
   useEffect(() => {
     fetchRUNs();
+
   }, []);
   
   useEffect(() => {}, [returnedData]);
