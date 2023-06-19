@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import Alert from '@mui/material/Alert';
 import './FormProyecto.css';
+import FuncionPaso from '../FuncionPaso/FuncionPaso';
 
-const FormularioPasantia = () => {
+const FormProyecto = ({RUN_Alumno}) => {
   const [titulo, setTitulo] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [horasSemanales, setHorasSemanales] = useState('');
@@ -26,22 +27,35 @@ const FormularioPasantia = () => {
     setDescripcion(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  //Función en donde se envían los datos ingresados por el alumno para que se agreguen a su detalle de pasantía.
+  const handleSubmit = async(event) => {
     event.preventDefault();
-
-    // Mostrar ventana de confirmación antes de enviar el formulario
-    if (window.confirm('¿Estás seguro de que deseas enviar el formulario?')) {
-      // Aquí puedes realizar cualquier lógica adicional con los datos del formulario
-      // Por ejemplo, enviar los datos al servidor o realizar validaciones
-      console.log('Datos del formulario:', {
-        titulo,
-        fechaInicio,
-        horasSemanales,
-        descripcion,
+    try {
+      const res = await fetch('/api/bd/cambiar/proyecto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          Titulo : titulo,
+          Descripcion : descripcion,
+          FechaInicio: fechaInicio,
+          HorasSemanales : horasSemanales,
+          RUN_Alumno : RUN_Alumno
+        })
       });
+      const data = await res.json();
 
-      setEnviado(true);
-    }
+      if (data.error) {
+        alert(data.error);
+      }
+    } catch (error) {
+      return <Alert severity="error">ERROR: Error en la actualización de la pasantía.</Alert>;
+    };
+    //Se cambia el paso a 5.5
+    FuncionPaso(5.5, RUN_Alumno);
+    setEnviado(true);
   };
 
   return (
@@ -50,7 +64,7 @@ const FormularioPasantia = () => {
       {!enviado ? (
         <Form onSubmit={handleSubmit} className="formulario">
           <FormGroup>
-            <Label for="titulo">Título del proyecto:</Label>
+            <Label for="titulo">Título del Proyecto:</Label>
             <Input
               type="text"
               id="titulo"
@@ -61,7 +75,7 @@ const FormularioPasantia = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Label for="fechaInicio">Fecha de inicio de la pasantía:</Label>
+            <Label for="fechaInicio">Fecha de Inicio de la Pasantía:</Label>
             <Input
               type="date"
               id="fechaInicio"
@@ -71,7 +85,7 @@ const FormularioPasantia = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Label for="horasSemanales">Horas semanales:</Label>
+            <Label for="horasSemanales">Horas Semanales:</Label>
             <Input
               type="select"
               id="horasSemanales"
@@ -80,17 +94,18 @@ const FormularioPasantia = () => {
               required
             >
               <option value="">Seleccionar</option>
-              <option value="full-time">Full-time</option>
-              <option value="part-time">Part-time</option>
+              <option value="full-time">Full-Time</option>
+              <option value="part-time">Part-Time</option>
             </Input>
           </FormGroup>
           <FormGroup>
-            <Label for="descripcion">Descripción del proyecto:</Label>
+            <Label for="descripcion">Descripción del Proyecto:</Label>
             <Input
               type="textarea"
               id="descripcion"
               value={descripcion}
               onChange={handleDescripcionChange}
+              maxLength={120}
               rows={5}
               required
             />
@@ -106,6 +121,6 @@ const FormularioPasantia = () => {
   );
 };
 
-export default FormularioPasantia;
+export default FormProyecto;
 
 
