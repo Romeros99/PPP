@@ -6,7 +6,7 @@ import {sendMail_supervisor_acepta} from '../FormPaso3/mailfunctions';
 const AceptacionSupervisor = ({setShowNavBar}) => {
     setShowNavBar(false)
     const { ID_Respuesta } = useParams();
-
+// Obtiene el correo electrónico del alumno a partir de su RUN
     const getMailAlumno = async (RUN) => {
       try {
         const response = await fetch(`/omega/bd/get/mail_alumno?RUN=${RUN}`);
@@ -21,7 +21,7 @@ const AceptacionSupervisor = ({setShowNavBar}) => {
         console.error('Error:', error);
       }
   }
-
+ // Obtiene el RUN del alumno a partir del ID de respuesta
     const fetchRunAlumno = async (ID_Respuesta) => {
       try {
         const response = await fetch(`/api/bd/respuesta/RUN?ID_Respuesta=${ID_Respuesta}`);
@@ -37,7 +37,7 @@ const AceptacionSupervisor = ({setShowNavBar}) => {
         console.error('Error:', error);
       }
   }
-
+// Acepta la respuesta del supervisor
     const FuncionAceptarRespuesta = async (ID_Respuesta) => {
       try {
         const res = await fetch('/api/bd/aceptar/respuestaSupervisor', {
@@ -53,7 +53,7 @@ const AceptacionSupervisor = ({setShowNavBar}) => {
         alert(error.message); // Mostrar el mensaje de error personalizado
       }
     };
-
+// Realiza las acciones necesarias al cargar el componente
       useLayoutEffect(() => {
       FuncionAceptarRespuesta(ID_Respuesta);
       fetchRunAlumno(ID_Respuesta);

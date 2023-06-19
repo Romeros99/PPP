@@ -6,13 +6,13 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
     const [supervisor, setSupervisor] = useState({ID_Supervisor: '', RUN_Empresas: '', Nombres: '', Apellidos: '', Mail: ''});
     const [showModal, setShowModal] = useState(false);
     
-
+    // Maneja el evento de retroceder en el formulario del supervisor
     const handleGoBackSup = () =>{
         setShowButton(true);
         setShowForm(true);
         setShowFormSupervisor(false);
     }
-
+// Maneja el evento de enviar los formularios
     const handleFormularios = () => {
         Paso = Paso + 0.5;
         FuncionPaso(Paso, RUN);
@@ -22,7 +22,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             window.location.href = '/alumno';
           }, 500);
       }
-    
+     // Maneja el cambio en los campos de entrada del formulario
     const handleInputChange = (e) =>{
         const { name, value } = e.target;
           setSupervisor(prevState => ({
@@ -30,6 +30,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             [name]: value
           }))
     }
+     // Envía los datos del supervisor al servidor
     const entregarDataSupervisor = async () => {
         try {
             const respuesta = await fetch('/api/bd/crear/supervisor', {
@@ -63,7 +64,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             alert('ERROR: Error en el intento de agregar el supervisor.')
         }
     };
-    
+    // Realiza la actualización del detalle
     const FuncionDetalle = async (RUN_Empresas, ID_Supervisor, RUN_Alumno) => {
         try {
           console.log('RUN: ',RUN_Alumno,  ' Run Empresas: ',RUN_Empresas, 'ID Supervisor: ', ID_Supervisor);

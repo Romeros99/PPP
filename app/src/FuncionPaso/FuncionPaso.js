@@ -1,4 +1,4 @@
-
+//funcion para actualizar el paso en el que se encuentra un alumno
 const FuncionPaso = async (Paso, RUN) => {
     try {
       console.log('RUN: ',RUN,  'y Paso: ',Paso);

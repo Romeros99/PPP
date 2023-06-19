@@ -11,6 +11,7 @@ const FormProyecto = ({RUN_Alumno}) => {
   const [descripcion, setDescripcion] = useState('');
   const [enviado, setEnviado] = useState(false);
 
+  //operaciones para formulario
   const handleTituloChange = (event) => {
     setTitulo(event.target.value);
   };

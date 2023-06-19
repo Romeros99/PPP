@@ -24,7 +24,7 @@ function App() {
     document.cookie = "access-Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     window.location.href = "/";
   };
-
+//verifica el rol del usuario y redirecciona a su pagina correspondiente
   const checkRolAndRedirect = async (role) => {
     if (role === 'alumno') {
       setRedirect('/alumno');
@@ -34,7 +34,7 @@ function App() {
       setRedirect('/');
     }
   };
-
+//obtiene nombre de usuario decodificando el token de sesion 
   const getUsername = async () => {
     try {
       const response = await fetch('/omega/decode_user_token', {

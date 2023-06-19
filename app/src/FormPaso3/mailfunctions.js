@@ -1,4 +1,4 @@
-
+//funcion para enviar mail con botones para el supervisor
 const sendMail_admin = async (destinatario,Rut_alumno,ID_Respuesta) => {
 
     let to = destinatario;
@@ -238,7 +238,7 @@ const sendMail_admin = async (destinatario,Rut_alumno,ID_Respuesta) => {
         console.error(error);
       });
   };
-
+//funcion para enviar mail al alumno 
   const sendMail_alumno = async (destinatario) => {
 
     let to = destinatario; 
@@ -449,7 +449,7 @@ const sendMail_admin = async (destinatario,Rut_alumno,ID_Respuesta) => {
 
 
 
-
+//mail al alumno si supervisor acepta la pasantia
 const sendMail_supervisor_acepta = async (destinatario) => {
 
   let to = destinatario; 
@@ -657,7 +657,7 @@ const sendMail_supervisor_acepta = async (destinatario) => {
       console.error(error);
     });
 };
-
+//mail al alumno si supervisor rechaza la pasantia
 const sendMail_supervisor_rechaza = async (destinatario) => {
 
   let to = destinatario; 

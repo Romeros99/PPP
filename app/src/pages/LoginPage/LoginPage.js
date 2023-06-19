@@ -11,11 +11,11 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const[showcredential_alert, setshowcredential_alert]= useState(false);
-  
+  // Maneja la selección del tipo de usuario
   const handleUserType = (type) => {
     setUserType(type);
   };
-
+// Vuelve a la pantalla anterior y restablece los campos
   const handleGoBack = () => {
     setUserType('');
     setUsername('');
@@ -82,7 +82,7 @@ const LoginPage = () => {
   }
 
 
-
+// Maneja el evento de inicio de sesión
   const handleLogin = async() => {
     // Lógica para el inicio de sesión
     if (userType === 'alumno' && username && password) {
@@ -102,7 +102,7 @@ const LoginPage = () => {
   };
 
   
-  
+  // Renderiza el formulario de inicio de sesión
   const renderLoginForm = () => {
     let placeholderText = '';
     if (userType === 'alumno') {

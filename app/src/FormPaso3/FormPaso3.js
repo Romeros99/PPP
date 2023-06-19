@@ -11,7 +11,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
     const [cambiosRealizados, setCambiosRealizados] = useState(false);
     const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: 0, RUN_Alumno: '', Tramitado: 0, Respuesta: null});
     const [respuestaCreada, setRespuestaCreada] = useState(false);
-
+    //crea una nueva respuesta de supervisor en base de datos
     const crearRespuestaSupervisor = async () => {
 
         try {
@@ -160,7 +160,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
         setShowModal(false);
         return;
       };
-
+      //eliminacion del supervisor en base de datos
     const sendRemoveSupervisor = async() => {
         try {
             const res = await fetch('/api/bd/remove/supervisor', {
@@ -207,7 +207,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             alert('ERROR: Error en la actualizacion del paso.')
         };
     };
-
+//operaciones para rechazar
     const handleRechazar = () => {
         sendRemoveSupervisor();
         setShowRechazo(true);
@@ -220,7 +220,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
         
 
     };
-
+//eliminacion de empresa de base de datos
     const sendRemoveEmpresa = async() => {
         try {
             const res = await fetch('/api/bd/remove/empresa', {
@@ -242,14 +242,14 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
         };
     };
     
-
+//operaciones para borrar
     const handleBorrar = () =>{
         sendRemoveEmpresa();
         setShowRechazo(false);
         setShowModal(false);
         setVisible(true);
     };
-
+//operaciones para mantener
     const handleMantener = () =>{
         setShowRechazo(false);
         setShowModal(false);

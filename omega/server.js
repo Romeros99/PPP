@@ -37,7 +37,7 @@ app.get('/omega/pdf/:filename', (req, res) => {
   const filePath = path.join(folderPath, req.params.filename);
   res.sendFile(filePath);
 });
-
+//operaciones de login para alumnos
 app.post('/omega/login_Alumnos', async (req, res) => {
   const mail = req.body.mail;
   const password= req.body.password;
@@ -64,7 +64,7 @@ app.post('/omega/login_Alumnos', async (req, res) => {
   }
   
 });
-
+//operaciones de login para administradores
 app.post('/omega/login_Admin', async (req, res) => {
   const mail = req.body.mail;
   const password= req.body.password;

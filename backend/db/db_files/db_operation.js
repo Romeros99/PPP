@@ -109,6 +109,7 @@ const getPasoActual = async(RUN, res) => {
     return;
   }
 }
+//funcion para cambiar el paso actual del alumno
 const cambiarPasoActual = async (Paso, RUN, res) => {
   try {
     const pool = await sql.connect(config);
@@ -122,7 +123,7 @@ const cambiarPasoActual = async (Paso, RUN, res) => {
     return error;
   }
 };
-
+//obtiene rut de empresas 
 const getEmpresas = async() => {
   try {
     const pool = await sql.connect(config);
@@ -208,7 +209,7 @@ const crearEmpresa = async(Empresa, res) => {
     return error;
   }
 };
-
+//funcion para crear supervisor en BBDD
 const crearSupervisor = async(Supervisor, res) => {
   try {
     //Verifica que los campos del alumno no estén vacíos y, en caso de ser vacíos, envía un error como respuesta al Frontend.
@@ -313,7 +314,7 @@ const cambiarInformacionSupervisor = async (Supervisor, res) => {
     return error;
   }
 };
-
+//crea una nueva respuesta de supervisor en bbdd a partir del rut del alumno
 const crearRespuesta = async (RUN_Alumno, res) =>{
   try{
     const pool = await sql.connect(config);
@@ -331,7 +332,7 @@ const crearRespuesta = async (RUN_Alumno, res) =>{
 
   }
 };
-
+//actualiza la respuesta del supervisor y detalle de pasantia si supervisor acepta la pasantia
 const aceptarRespuesta = async (ID_Respuesta) => {
   try {
     const pool = await sql.connect(config);
@@ -360,7 +361,7 @@ const aceptarRespuesta = async (ID_Respuesta) => {
     throw error;
   }
 };
-
+//actualiza la respuesta del supervisor y el detalle de pasantia si supervisor rechaza la pasantia
 const rechazarRespuesta = async (ID_Respuesta) => {
   try {
     const pool = await sql.connect(config);
@@ -443,7 +444,7 @@ const removeEmpresa = async(Empresa, res) => {
     return error;
   }
 };
-
+//obtiene el rut del alumno a partir del id de respuesta
 const getRUNbyRespuesta = async (ID_Respuesta,res) => {
   try{
   const pool = await sql.connect(config)

@@ -179,7 +179,7 @@ const get_userdata = (Mail, rol) => {
     });
   });
 };
-
+//obtiene el mail del alumno a partir del rut
 const getMailFromRut = async (RUN,res) => {
   try{
   const pool = await sql.connect(config)
