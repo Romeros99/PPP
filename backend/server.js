@@ -74,32 +74,36 @@ app.get('/api/bd/pendientes/pasantias', async(req, res) => {
   res.send(result.recordset);
 });
 
-
 //request para llevar el paso actual del alumno al frontend 
 app.get('/api/bd/pasoactual', async(req, res) => {
   const { RUN } = req.query;
   await db_operation.getPasoActual(RUN, res);
 });
 
+//request para cambiar el paso del alumno
 app.post('/api/bd/cambiarPaso', async(req, res) => {
   const { Paso,RUN } = req.body;
   await db_operation.cambiarPasoActual(Paso, RUN, res);
 });
+
 //request para crear una respuesta de supervisor
 app.post('/api/bd/crear/respuestaSupervisor', async(req,res) =>{
   const {RUN_Alumno} = req.body;
   await db_operation.crearRespuesta(RUN_Alumno,res);
 })
+
 //request de aceptar respuesta de supervisor
 app.post('/api/bd/aceptar/respuestaSupervisor', async(req) =>{
   const {ID_Respuesta} = req.body;
   await db_operation.aceptarRespuesta(ID_Respuesta);
 })
+
 //request de rechazar respuesta de supervisor
 app.post('/api/bd/rechazar/respuestaSupervisor', async(req) =>{
   const {ID_Respuesta} = req.body;
   await db_operation.rechazarRespuesta(ID_Respuesta);
 })
+
 //request de crear reglamento
 app.post('/api/bd/crear/reglamento', async(req, res) => {
   await db_operation.crearReglamento(req.body, res);
@@ -125,6 +129,7 @@ app.post('/api/bd/crear/supervisor', async(req, res) => {
   await db_operation.crearSupervisor(req.body, res);
 });
 
+//request para cambiar el detalle de pasantía
 app.post('/api/bd/cambiarDetalle', async(req, res) => {
   const { RUN_Empresas, ID_Supervisor, RUN_Alumno } = req.body;
   await db_operation.cambiarDetallePasantia(RUN_Empresas, ID_Supervisor, RUN_Alumno, res);
@@ -149,10 +154,16 @@ app.post('/api/bd/remove/supervisor', async(req, res) => {
 app.post('/api/bd/remove/empresa', async(req, res) => {
   await db_operation.removeEmpresa(req.body, res);
 });
+
 //request para llevar el rut del alumno segun id de la respuesta
 app.get('/api/bd/respuesta/RUN', async(req, res) => {
   const { ID_Respuesta } = req.query;
   await db_operation.getRUNbyRespuesta(ID_Respuesta, res);
+});
+
+//request agregar la información del proyecto al detalle de pasantía
+app.post('/api/bd/cambiar/proyecto', async(req, res) => {
+  await db_operation.cambiarDetalleProyecto(req.body, res);
 });
 
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));

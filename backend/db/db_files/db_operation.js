@@ -443,6 +443,7 @@ const removeEmpresa = async(Empresa, res) => {
     return error;
   }
 };
+
 const getRUNbyRespuesta = async (ID_Respuesta,res) => {
   try{
   const pool = await sql.connect(config)
@@ -458,6 +459,25 @@ const getRUNbyRespuesta = async (ID_Respuesta,res) => {
     return error;
   }
 }
+
+//Funcion para cambiar el detalle de pasantía y agregar la información acerca del proyecto de pasantía
+const cambiarDetalleProyecto = async(Proyecto, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.request()
+    .query(`UPDATE Detalle_Pasantia
+            SET Nombre_Proyecto = '${Proyecto.Titulo}', Descripcion_Proyecto = '${Proyecto.Descripcion}', Fecha_Inicio = convert(DATETIME, '${Proyecto.FechaInicio}'), Horas_Semanales = ${Proyecto.HorasSemanales === 'part-time' ? 30 : 45}
+            WHERE RUN_Alumno = '${Proyecto.RUN_Alumno}'`);
+    
+    res.status(200).json({ message : 'Detalle de pasantia modificado correctamente.'});
+    return;
+  }
+  catch(error) {
+    res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+};
+
 module.exports = {
   getRUNsPendientes,
   getPasantiasPendientes,
@@ -472,6 +492,7 @@ module.exports = {
   cambiarDetallePasantia,
   cambiarInformacionEmpresa,
   cambiarInformacionSupervisor,
+  cambiarDetalleProyecto,
   removeReglamento,
   removeSupervisor,
   removeEmpresa,
