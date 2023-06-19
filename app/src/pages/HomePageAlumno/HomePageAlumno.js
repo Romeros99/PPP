@@ -47,7 +47,6 @@ const HomePageAlumno = () => {
 
       //Setter del CurrentStep
       setCurrentStep(step);
-      console.log("step:", step)
     } catch (error) {
       console.error('Error:', error);
     }
@@ -56,6 +55,7 @@ const HomePageAlumno = () => {
   const handleClick = (step) => {
     setContent(generarContenido(step));
   };
+
   //segun el paso en que se encuentra muestra distintas situaciones
   const generarContenido = (step) => {
     switch (step){
@@ -77,11 +77,15 @@ const HomePageAlumno = () => {
       case 2.5:
         return (
           <p>Se ha enviado la información de la empresa y supervisor correctamente, porfavor espere a una respuesta del administrador para continuar con el paso 3</p>
-        )
+        );
       case 5:
         return(
-          <FormProyecto/>
-        )
+          <FormProyecto RUN_Alumno = {cuenta.run}/>
+        );
+      case 5.5:
+        return (
+          <p>Se ha enviado la información del proyecto, porfavor espere a una respuesta del administrador para continuar con el paso 6</p>
+        );
     }
   };
 
