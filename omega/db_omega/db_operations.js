@@ -179,6 +179,23 @@ const get_userdata = (Mail, rol) => {
     });
   });
 };
+
+const getMailFromRut = async (RUN,res) => {
+  try{
+  const pool = await sql.connect(config)
+  const getMail = await pool.request().query(`SELECT Mail_UAI FROM Alumnos 
+  WHERE RUN_Alumno = '${RUN}'`);
+  //console.log();
+  res.status(200).json({mail_Alumno: getMail.recordset[0].Mail_UAI});
+  return;
+  }
+  catch(error) {
+    console.log(error);
+    //res.status(500).json({ error: 'ERROR: Error interno de servidor.' });
+    return error;
+  }
+}
+
 module.exports = {
   arr_to_str,
   getAlumnosPendientes,
@@ -186,5 +203,6 @@ module.exports = {
   removeAlumno,
   Login_Alumno,
   Login_Admin,
-  get_userdata
+  get_userdata,
+  getMailFromRut
 }

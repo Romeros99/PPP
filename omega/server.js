@@ -114,4 +114,10 @@ app.get('/omega/get_user_data', async (req, res) => {
   });
 });
 
+//obtener mail de alumno por rut
+app.get('/omega/bd/get/mail_alumno', async(req, res) => {
+  const { RUN } = req.query;
+  await db_operation.getMailFromRut(RUN, res);
+});
+
 app.listen(API_PORT, () => console.log(`Listening on Port ${API_PORT}`));
