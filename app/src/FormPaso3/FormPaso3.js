@@ -151,12 +151,13 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
     
         try {
           FuncionPaso(3.5, datos.RUN_Alumno);
+          setCambiosRealizados(false);
+          await crearRespuestaSupervisor();
         } catch (error) {
           alert('ERROR: Error en la actualización del paso.');
         }
     
-        setCambiosRealizados(false);
-        await crearRespuestaSupervisor();
+        
         setShowModal(false);
         return;
       };
@@ -213,10 +214,10 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
         setShowRechazo(true);
         try {
             FuncionPaso(2.0, datos.RUN_Alumno);
+            mailfunctions.sendMail_alumno(datos.Mail_Alumno);
         } catch (error) {
             alert('ERROR: Error en la actualizacion del paso.')
         };
-        mailfunctions.sendMail_alumno(datos.Mail_Alumno);
         
 
     };
