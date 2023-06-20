@@ -285,6 +285,43 @@ const cambiarDetallePasantia = async (RUN_Empresas, ID_Supervisor, RUN_Alumno, r
 //Función para realizar un update del detalle de la empresa
 const cambiarInformacionEmpresa = async (Empresa, res) => {
   try {
+    //Verifica que el RUT tenga un formato adecuado y, en caso de no tenerlo, envía un error como respuesta al Frontend.
+    const RUNRegExp = /^[0-9]{1,2}\.[0-9]{3}\.[0-9]{3}\-[0-9]$/;
+    if (!RUNRegExp.test(Empresa.RUN_Empresas)){
+      res.status(400).json({ error: 'ERROR: RUN inválido.' });
+      return;
+    }
+
+    //Verifica que los campos del alumno no estén vacíos y, en caso de ser vacíos, envía un error como respuesta al Frontend.
+    if (Empresa.Nombre.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese el nombre de la empresa.' });
+      return;
+    }
+
+    if (Empresa.Calle_Direccion.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese la calle de la dirección.' });
+      return;
+    }
+
+    if (isNaN(Empresa.Numero_Direccion)){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese un numero en el numero de la direccion.' });
+      return;
+    }
+
+    if (Empresa.Comuna_Direccion.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese la comuna de la empresa.' });
+      return;
+    }
+
+    if (Empresa.Ciudad_Direccion.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese la ciudad de la empresa.' });
+      return;
+    }
+
+    if (Empresa.Rubro.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese el rubro de la empresa.' });
+      return;
+    }
     const pool = await sql.connect(config);
     await pool.request().query(`UPDATE Empresas 
                                 SET RUN_Empresas = '${Empresa.RUN_Empresas}', Nombre = '${Empresa.Nombre}', Calle_Direccion = '${Empresa.Calle_Direccion}', Numero_Direccion = ${Empresa.Numero_Direccion}, 
