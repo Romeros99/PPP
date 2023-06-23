@@ -56,11 +56,23 @@ const crearReglamento = async(Reglamento, res) => {
 
 //Función para crear un registro de detalle de pasantía.
 const crearPasantia = async(Alumno, res) => {
+  //Primero se busca el ID_Reglamento del alumno
+  let ID_Reglamento = 0;
   try {
-    //Deja el resto de las calumnas en NULL ya que son la información que se debería registrar en el siguiente Paso de la aplicación.
     const pool = await sql.connect(config);
+    const resultado = await pool.request()
+    .query(`SELECT ID_Reglamento FROM Reglamentos
+            WHERE RUN_Alumno = '${Alumno.RUN_Alumno}'`);
+    if (resultado.recordset.length === 0) {
+      res.status(500).json({ error: 'ERROR: El alumno no tiene reglamento aceptado.' });
+      return;
+    } else {
+      ID_Reglamento = resultado.recordset[0].ID_Reglamento;
+    };
+    //Luego se crea el detalle de pasantía del alumno
+    //Deja el resto de las calumnas en NULL ya que son la información que se debería registrar en el siguiente Paso de la aplicación.
     const insertPasantia = await pool.request().query(`INSERT INTO Detalle_Pasantia VALUES
-      ('${Alumno.RUN_Alumno}', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.0)`);
+      ('${Alumno.RUN_Alumno}', NULL, NULL, ${ID_Reglamento}, NULL, NULL, NULL, NULL, NULL, 2.0)`);
     
     res.status(201).json({ message: 'Pasantía creada.' });
     return;
@@ -521,6 +533,7 @@ module.exports = {
   getPasantiasPendientes,
   getEmpresas,
   getPasoActual,
+  getRUNbyRespuesta,
   crearReglamento,
   crearPasantia,
   crearEmpresa,
@@ -535,6 +548,5 @@ module.exports = {
   removeSupervisor,
   removeEmpresa,
   aceptarRespuesta,
-  rechazarRespuesta,
-  getRUNbyRespuesta
+  rechazarRespuesta
 }
