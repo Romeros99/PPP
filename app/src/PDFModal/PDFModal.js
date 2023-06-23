@@ -7,13 +7,11 @@ function PDFModal({pdfUrl, Alumno}) {
    //define constantes con sus metodos set 
   const [comentarios, setComentarios] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [alumno, setAlumno] = useState(Alumno);
-  //funcion que cierra el modal
   const handleRechazar = () => {
     setShowModal(true);
   };
- 
-//envia realiza una solicitud post para eliminar registro de un reglamento de la base de datos
+
+  //envia realiza una solicitud post para eliminar registro de un reglamento de la base de datos
   const sendDataReglamento = async () => {
     try {
       const respuesta = await fetch('/api/bd/eliminar/reglamento', {
@@ -23,7 +21,7 @@ function PDFModal({pdfUrl, Alumno}) {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          RUN_Alumno: alumno.RUN_Alumno,
+          RUN_Alumno: Alumno.RUN_Alumno,
         })
       })
   
@@ -32,7 +30,7 @@ function PDFModal({pdfUrl, Alumno}) {
     }
   }
 
-//envia  solicitud  post para crear una pasantia en la base de datos
+  //envia  solicitud  post para crear una pasantia en la base de datos
   const sendDataPasantia = async () => {
     try {
       const respuesta = await fetch('/api/bd/crear/pasantia', {
@@ -42,7 +40,7 @@ function PDFModal({pdfUrl, Alumno}) {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          RUN_Alumno: alumno.RUN_Alumno,
+          RUN_Alumno: Alumno.RUN_Alumno
         })
       })
       
@@ -60,10 +58,10 @@ function PDFModal({pdfUrl, Alumno}) {
 
   //crea el correo electronico y lo envia por solicitud post para realizar el envio.
   const sendMail = async () => {
-    let to = alumno.Mail_UAI; //Sacar de la base de datos para cada alumno
+    let to = Alumno.Mail_UAI; //Sacar de la base de datos para cada alumno
     const subject = 'Notificacion Pasantias UAI';
     const text = 'Se han aceptado sus requisitos de pasantia'
-    const html = `<p>Estimado ${alumno.Nombres + ' ' + alumno.Apellidos},</p>
+    const html = `<p>Estimado ${Alumno.Nombres + ' ' + Alumno.Apellidos},</p>
                   <div>
                     <p>Junto con saludarlo, le informamos que se ha aceptado su solicitud para iniciar su track de titulación por medio de pasantía. Por favor, ingrese los datos de la empresa en el Paso 2 que estará habilitado en su cuenta de Pasantías Paso a Paso.</p>
                     <p>Cualquier consulta, no dude contactornos por medio del siguiente correo pasantiasppuai@gmail.com</p>
@@ -101,10 +99,10 @@ function PDFModal({pdfUrl, Alumno}) {
       return;
     }
     
-    const to = alumno.Mail_UAI; //Notificar al alumno
+    const to = Alumno.Mail_UAI; //Notificar al alumno
     const subject = 'Notificacion Pasantias UAI';
     const text = 'Requisitos rechazados'
-    const html = `<p>Estimado ${alumno.Nombres + ' ' + alumno.Apellidos},</p>
+    const html = `<p>Estimado ${Alumno.Nombres + ' ' + Alumno.Apellidos},</p>
                   <div>
                     <p>Junto con saludarlo, le informamos que se ha rechazado su solicitud para iniciar su track de titulación por medio de pasantía por la siguiente razón:</p>
                     <div>
