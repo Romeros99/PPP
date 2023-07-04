@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Form, FormGroup, Label, Input, Row,Col } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Alert } from 'reactstrap';
 import './FormEmpresa.css';
+import Alerta from '../Alerta/Alerta.js';
 import FormSupervisor from '../FormSupervisor/FormSupervisor';
 
 function FormEmpresa({Paso, RUN}){
@@ -13,6 +14,9 @@ function FormEmpresa({Paso, RUN}){
     const [isDisabled, setIsDisabled] = useState(true);
     const [counter, setCounter] = useState(0);
     const [showButton, setShowButton] = useState(true);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTipo, setAlertTipo] = useState('');
     const [isDone, setIsDone] = useState(false);
     const [showFormSupervisor, setShowFormSupervisor] = useState(false);
     
@@ -99,7 +103,10 @@ function FormEmpresa({Paso, RUN}){
             const data = await respuesta.json();
             
             if (data.error) {
-              alert(data.error);
+              //alert(data.error);
+              setShowAlert(true);
+              setAlertMessage(data.error);
+              setAlertTipo('danger');
             }
             else{
                 setShowButton(!showButton);
@@ -108,7 +115,10 @@ function FormEmpresa({Paso, RUN}){
                 setShowFormSupervisor(true);
             }
         } catch (error){
-            alert('ERROR: Error en el intento de creación de empresa.')
+            //alert('ERROR: Error en el intento de creación de empresa.')
+            setShowAlert(true);
+            setAlertMessage('ERROR: Error en el intento de creación de empresa.');
+            setAlertTipo('danger');
         }
     };
 
@@ -130,11 +140,8 @@ function FormEmpresa({Paso, RUN}){
             setShowButton(!showButton);
             setIsDone(true);
             setShowFormSupervisor(true)
-            console.log("Acción A");
         } else {
             entregarDataEmpresa();
-            // Realiza la acción B
-            console.log("Acción B");
         }
         };
 
@@ -144,7 +151,7 @@ function FormEmpresa({Paso, RUN}){
         setShowBar(false)
         setShowForm(true);
         setIsReadOnly(false);
-    }
+    };
 
     const handleGoBack = () => {
         setEmpresa({
@@ -162,6 +169,7 @@ function FormEmpresa({Paso, RUN}){
         setShowForm(false);
         setIsDisabled(true);
       };
+
     return(
         <div>
         <div>
@@ -303,6 +311,7 @@ function FormEmpresa({Paso, RUN}){
                     <br></br>
                     {showButton && <Button className='accept-button margin-left' onClick = {() => handleClick()}>Confirmar</Button>}
                     {showButton &&<Button onClick={handleGoBack}>Volver</Button>}
+                    {<Alerta mensaje = {alertMessage} tipo = {alertTipo} showAlert = {showAlert} setShowAlert = {setShowAlert}/>}
                     {isDone && (
                         <FormSupervisor setShowButton={setShowButton} setShowForm={setShowForm} setShowFormSupervisor = {setShowFormSupervisor} showFormSupervisor = {showFormSupervisor} empresa = {empresa} Paso = {Paso} RUN = {RUN}/>
                     )}

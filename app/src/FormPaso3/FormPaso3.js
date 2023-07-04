@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Button, Form, Label, Input, Row,Col, ModalBody, Modal, ModalHeader, ModalFooter, Alert } from 'reactstrap';
 import './FormPaso3.css';
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
+import Alerta from '../Alerta/Alerta.js';
 import mailfunctions from './mailfunctions'; //se traen las funciones con html de mail desde mailfunctions
 
 const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
@@ -12,8 +13,15 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
     const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: 0, RUN_Alumno: '', Tramitado: 0, Respuesta: null});
     const [respuestaCreada, setRespuestaCreada] = useState(false);
     //crea una nueva respuesta de supervisor en base de datos
-    const crearRespuestaSupervisor = async () => {
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTipo, setAlertTipo] = useState('');
+    const [showAlert2, setShowAlert2] = useState(false);
+    const [alertMessage2, setAlertMessage2] = useState('Acción realizada exitosamente.');
+    const [alertTipo2, setAlertTipo2] = useState('success');
 
+
+    const crearRespuestaSupervisor = async () => {
         try {
             const respuesta = await fetch('/api/bd/crear/respuestaSupervisor', {
             method: 'POST',
@@ -29,31 +37,29 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
                 })
             })
             const data = await respuesta.json();
-            console.log("respuesta data: ", JSON.stringify(data));
             if (data.error) {
-              alert(data.error);
+              setShowAlert(true);
+              setAlertMessage(data.error);
+              setAlertTipo('danger');
             }
             else{
               const IDRespuesta = data.lastID;
-              console.log('lastID: ', IDRespuesta);
               setRespuestaSupervisor(prevState => ({
                 ...prevState,
                 ID_Respuesta: IDRespuesta
               }));
               setRespuestaCreada(true);
-              
-              
             }
         } catch (error){
-            alert('ERROR: Error en el intento de agregar el supervisor.')
+            setShowAlert(true);
+            setAlertMessage('ERROR: Error en el intento de agregar el supervisor.');
+            setAlertTipo('danger');
         }
       };
 
       useEffect(() => {
         if (respuestaCreada) {
           // Realizar acciones adicionales después de que respuestaSupervisor haya sido actualizado
-          console.log("respuesta supervisor: ", respuestaSupervisor);
-          console.log('id:', respuestaSupervisor.ID_Respuesta);
           mailfunctions.sendMail_admin(
             datos.Mail,
             datos.RUN_Alumno,
@@ -80,7 +86,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             }));
         }
     };
-    
+
     //Post requests para hacer los updates de los detalles de la empresa, del supervisor y del detalle_pasantia
     const sendChangesAceptar = async () => {
         try {
@@ -94,12 +100,15 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
               
             });
             const data = await res.json();
-      
+
             if (data.error) {
-              alert(data.error);
+              throw new Error(data.error);
             }
           } catch (error) {
-            alert('ERROR: Error en la actualizacion de la empresa.');
+            setShowAlert(true);
+            setAlertMessage(error.message);
+            setAlertTipo('danger');
+            throw new Error('ERROR: Error en la actualización de la empresa.');
         };
         try {
             const res = await fetch('/api/bd/cambiar/supervisor', {
@@ -114,10 +123,13 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             const data = await res.json();
       
             if (data.error) {
-              alert(data.error);
-            }
+              throw new Error(data.error);
+            };
           } catch (error) {
-            alert('ERROR: Error en la actualizacion del supervisor.');
+            setShowAlert(true);
+            setAlertMessage(error.message);
+            setAlertTipo('danger');  
+            throw new Error('ERROR: Error en la actualización del supervisor.');
         };
         try {
             const res = await fetch('/api/bd/cambiarDetalle', {
@@ -135,33 +147,41 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             const data = await res.json();
             
             if (data.error) {
-              alert(data.error);
+              throw new Error(data.error);
             }
         } catch (error) {
-            alert('ERROR: Error en la actualizacion del detalle de pasantía.');
+            setShowAlert(true);
+            setAlertMessage(error.message);
+            setAlertTipo('danger');
+            throw new Error('ERROR: Error en la actualización del detalle de pasantía.');
         };
     };
 
     //Se realizan los cambios de update en la base de datos si se realizó algún cambio en la infomación de la empresa o del supervisor, por parte del administrador
     const handleAceptar = async () => {
-        setShowModal(false);
         if (cambiosRealizados === true) {
-          await sendChangesAceptar();
+          try{
+            await sendChangesAceptar(); 
+          } catch (error) {
+            return;
+          }
         }
     
         try {
-          FuncionPaso(3.5, datos.RUN_Alumno);
           setCambiosRealizados(false);
+          FuncionPaso(3.5, datos.RUN_Alumno);
           await crearRespuestaSupervisor();
         } catch (error) {
-          alert('ERROR: Error en la actualización del paso.');
+          setShowAlert(true);
+          setAlertMessage('ERROR: Error en la actualización del paso.');
+          setAlertTipo('danger');
         }
     
-        
         setShowModal(false);
         return;
       };
-      //eliminacion del supervisor en base de datos
+      
+    //eliminacion del supervisor en base de datos
     const sendRemoveSupervisor = async() => {
         try {
             const res = await fetch('/api/bd/remove/supervisor', {
@@ -176,10 +196,12 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             const data = await res.json();
       
             if (data.error) {
-              alert(data.error);
+              throw new Error(data.error);
             }
           } catch (error) {
-            alert('ERROR: Error en la eliminación del supervisor.');
+            setShowAlert2(true);
+            setAlertMessage2('ERROR: Error en la eliminación del supervisor.');
+            setAlertTipo2('danger');
         };
         try {
             const res = await fetch('/api/bd/cambiarDetalle', {
@@ -197,18 +219,23 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             const data = await res.json();
             
             if (data.error) {
-              alert(data.error);
+              throw new Error(data.error);
             }
         } catch (error) {
-            alert('ERROR: Error en la actualizacion del detalle de pasantía.');
+            setShowAlert2(true);
+            setAlertMessage2('ERROR: Error en la actualización del detalle de pasantía.');
+            setAlertTipo2('danger');
         };
         try {
             FuncionPaso(2.0, datos.RUN_Alumno);
         } catch (error) {
-            alert('ERROR: Error en la actualizacion del paso.')
+            setShowAlert2(true);
+            setAlertMessage2('ERROR: Error en la actualización del paso.');
+            setAlertTipo2('danger');
         };
     };
-//operaciones para rechazar
+
+    //operaciones para rechazar
     const handleRechazar = () => {
         sendRemoveSupervisor();
         setShowRechazo(true);
@@ -216,12 +243,13 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             FuncionPaso(2.0, datos.RUN_Alumno);
             mailfunctions.sendMail_alumno(datos.Mail_Alumno);
         } catch (error) {
-            alert('ERROR: Error en la actualizacion del paso.')
+            setShowAlert2(true);
+            setAlertMessage2('ERROR: Error en la actualización del paso.');
+            setAlertTipo2('danger');
         };
-        
-
     };
-//eliminacion de empresa de base de datos
+
+    //eliminacion de empresa de base de datos
     const sendRemoveEmpresa = async() => {
         try {
             const res = await fetch('/api/bd/remove/empresa', {
@@ -236,33 +264,34 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
             const data = await res.json();
       
             if (data.error) {
-              alert(data.error);
+              throw new Error(data.error);
             }
           } catch (error) {
-            alert('ERROR: Error en la eliminación del supervisor.');
+            setShowAlert2(true);
+            setAlertMessage2('ERROR: Error en la eliminación de la empresa.');
+            setAlertTipo2('danger');
         };
     };
     
-//operaciones para borrar
+    //operaciones para borrar
     const handleBorrar = () =>{
         sendRemoveEmpresa();
         setShowRechazo(false);
         setShowModal(false);
-        setVisible(true);
+        setShowAlert2(true);
     };
-//operaciones para mantener
+
+    //operaciones para mantener
     const handleMantener = () =>{
         setShowRechazo(false);
         setShowModal(false);
-        setVisible(true);
+        setShowAlert2(true);
     };
 
     return(
         <div>
         <div>
-            <Alert color="success" isOpen={visible} toggle={() => setVisible(false)} style = {{position: 'absolute', top: 70, left: 50, right: 50 }}>
-            La empresa y supervisor se ha borrado exitosamente
-            </Alert>
+            {<Alerta mensaje = {alertMessage2} tipo = {alertTipo2} showAlert = {showAlert2} setShowAlert = {setShowAlert2}/>}
         </div>
         <div>
         <Modal isOpen={showModal} >
@@ -430,6 +459,7 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
                     <br></br>
                     <Button className='accept-button margin-left' onClick = {() => handleAceptar()}>Confirmar</Button>
                     <Button className='margin-left' color = 'danger' onClick = {() => handleRechazar()}>Rechazar</Button>
+                    {<Alerta mensaje = {alertMessage} tipo = {alertTipo} showAlert = {showAlert} setShowAlert = {setShowAlert}/>}
                 </Form>
             </ModalBody>
             </Modal>

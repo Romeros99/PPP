@@ -1,18 +1,22 @@
 import React, {useState} from 'react';
 import { Button, Form, Label, Input, Row,Col, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
+import Alerta from '../Alerta/Alerta.js';
 
 const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, showFormSupervisor, empresa, Paso, RUN}) => {
     const [supervisor, setSupervisor] = useState({ID_Supervisor: '', RUN_Empresas: '', Nombres: '', Apellidos: '', Mail: ''});
     const [showModal, setShowModal] = useState(false);
-    
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTipo, setAlertTipo] = useState('');
+
     // Maneja el evento de retroceder en el formulario del supervisor
     const handleGoBackSup = () =>{
         setShowButton(true);
         setShowForm(true);
         setShowFormSupervisor(false);
     }
-// Maneja el evento de enviar los formularios
+    // Maneja el evento de enviar los formularios
     const handleFormularios = () => {
         Paso = Paso + 0.5;
         FuncionPaso(Paso, RUN);
@@ -22,7 +26,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             window.location.href = '/alumno';
           }, 500);
       }
-     // Maneja el cambio en los campos de entrada del formulario
+    // Maneja el cambio en los campos de entrada del formulario
     const handleInputChange = (e) =>{
         const { name, value } = e.target;
           setSupervisor(prevState => ({
@@ -30,7 +34,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             [name]: value
           }))
     }
-     // Envía los datos del supervisor al servidor
+    // Envía los datos del supervisor al servidor
     const entregarDataSupervisor = async () => {
         try {
             const respuesta = await fetch('/api/bd/crear/supervisor', {
@@ -50,7 +54,10 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             const data = await respuesta.json();
             console.log("respuesta data: ", JSON.stringify(data));
             if (data.error) {
-              alert(data.error);
+              //alert(data.error);
+              setShowAlert(true);
+              setAlertMessage(data.error);
+              setAlertTipo('danger');
             }
             else{
               setShowModal(false);
@@ -61,13 +68,15 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
               handleFormularios();
             }
         } catch (error){
-            alert('ERROR: Error en el intento de agregar el supervisor.')
+            //alert('ERROR: Error en el intento de agregar el supervisor.')
+            setShowAlert(true);
+            setAlertMessage('ERROR: Error en el intento de agregar el supervisor.');
+            setAlertTipo('danger');
         }
     };
     // Realiza la actualización del detalle
     const FuncionDetalle = async (RUN_Empresas, ID_Supervisor, RUN_Alumno) => {
         try {
-          console.log('RUN: ',RUN_Alumno,  ' Run Empresas: ',RUN_Empresas, 'ID Supervisor: ', ID_Supervisor);
           const res = await fetch('/api/bd/cambiarDetalle', {
             method: 'POST',
             headers: {
@@ -78,13 +87,18 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
             
           });
           const data = await res.json();
-          //console.log(data);
-    
+          
           if (data.error) {
-            alert(data.error);
+            //alert(data.error);
+            setShowAlert(true);
+            setAlertMessage(data.error);
+            setAlertTipo('danger');
           }
         } catch (error) {
-          alert('ERROR: Error en la actualizacion del paso.');
+          //alert('ERROR: Error en la actualizacion del paso.');
+          setShowAlert(true);
+          setAlertMessage('ERROR: Error en la actualización del paso.');
+          setAlertTipo('danger');
         }
       };
 
@@ -118,6 +132,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
                         Confirmar
                     </Button>
                     <Button onClick={() => handleGoBackSup()}>Volver</Button>
+                    {<Alerta mensaje = {alertMessage} tipo = {alertTipo} showAlert = {showAlert} setShowAlert = {setShowAlert}/>}
                 </Form>
                 </div>
             </div>
@@ -135,6 +150,7 @@ const FormSupervisor = ({setShowButton, setShowForm, setShowFormSupervisor, show
                 <Button color="secondary" onClick={() => setShowModal(false)}>
                     Cancelar
                 </Button>
+                {<Alerta mensaje = {alertMessage} tipo = {alertTipo} showAlert = {showAlert} setShowAlert = {setShowAlert}/>}
             </ModalFooter>
       </Modal>
       
