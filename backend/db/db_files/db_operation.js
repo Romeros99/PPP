@@ -1,7 +1,6 @@
 const config    = require('./db_config'),
       sql       = require('mssql')
 
-
 //Función que retorna todos los alumnos que estén en estado Pendiente de Verificación de Requisitos (Aquellos que tengan un registro de su reglamento pero que todavía no tengan su registro de detalle pasantía).
 const getRUNsPendientes = async() => {
   try {
@@ -121,6 +120,7 @@ const getPasoActual = async(RUN, res) => {
     return;
   }
 }
+
 //funcion para cambiar el paso actual del alumno
 const cambiarPasoActual = async (Paso, RUN, res) => {
   try {
@@ -221,6 +221,7 @@ const crearEmpresa = async(Empresa, res) => {
     return error;
   }
 };
+
 //funcion para crear supervisor en BBDD
 const crearSupervisor = async(Supervisor, res) => {
   try {
@@ -237,6 +238,12 @@ const crearSupervisor = async(Supervisor, res) => {
 
     if (Supervisor.Mail.length === 0){
       res.status(400).json({ error: 'ERROR: Por favor ingrese un mail.' });
+      return;
+    }
+
+    const MailRegExp = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+    if (!MailRegExp.test(Supervisor.Mail)){
+      res.status(400).json({ error: 'ERROR: Mail del supervisor inválido.' });
       return;
     }
 
@@ -300,7 +307,7 @@ const cambiarInformacionEmpresa = async (Empresa, res) => {
     //Verifica que el RUT tenga un formato adecuado y, en caso de no tenerlo, envía un error como respuesta al Frontend.
     const RUNRegExp = /^[0-9]{1,2}\.[0-9]{3}\.[0-9]{3}\-[0-9]$/;
     if (!RUNRegExp.test(Empresa.RUN_Empresas)){
-      res.status(400).json({ error: 'ERROR: RUN inválido.' });
+      res.status(400).json({ error: 'ERROR: RUN de la empresa inválido.' });
       return;
     }
 
@@ -351,6 +358,28 @@ const cambiarInformacionEmpresa = async (Empresa, res) => {
 //Función para realizar un update del detalle del supervisor
 const cambiarInformacionSupervisor = async (Supervisor, res) => {
   try {
+    //Verifica que los campos del alumno no estén vacíos y, en caso de ser vacíos, envía un error como respuesta al Frontend.
+    if (Supervisor.Nombres.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese el nombre del supervisor.' });
+      return;
+    }
+
+    if (Supervisor.Apellidos.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese los apellidos.' });
+      return;
+    }
+
+    if (Supervisor.Mail.length === 0){
+      res.status(400).json({ error: 'ERROR: Por favor ingrese el mail del supervisor.' });
+      return;
+    }
+
+    const MailRegExp = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+    if (!MailRegExp.test(Supervisor.Mail)){
+      res.status(400).json({ error: 'ERROR: Mail del supervisor inválido.' });
+      return;
+    }
+
     const pool = await sql.connect(config);
     await pool.request().query(`UPDATE Supervisores
                                 SET Nombres = '${Supervisor.Nombres}', Apellidos = '${Supervisor.Apellidos}', Mail = '${Supervisor.Mail}'
@@ -425,11 +454,18 @@ const rechazarRespuesta = async (ID_Respuesta) => {
         SET Tramitado = 1, Respuesta = 'Rechazado'
         WHERE ID_Respuesta = '${ID_Respuesta}'
       `);
+      const result2 = await pool.request().query(`
+        SELECT ID_Supervisor FROM Detalle_Pasantia
+        WHERE RUN_Alumno = '${result.recordset[0].RUN_Alumno}'
+      `);
       const insertEmpresa = await pool.request().query(`
         UPDATE Detalle_Pasantia
         SET Paso_Actual = 2, RUN_Empresas = NULL, ID_Supervisor = NULL
         WHERE RUN_Alumno = '${result.recordset[0].RUN_Alumno}'
       `);
+      const deleteSupervisor = await pool.request().query(`
+        DELETE FROM Supervisores
+        WHERE ID_Supervisor = ${result2.recordset[0].ID_Supervisor}`);
     } else {
       return
     }
