@@ -1,16 +1,19 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import './LoginPage.css';
 import React, { useState } from 'react';
-import {Button} from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { Alert } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { TextField } from '@mui/material'
+import PersonIcon from '@mui/icons-material/Person';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import backgroundImage from '../../Images/campus_UAI5.jpg';
+import logoUAI from '../../Images/logo_uai.png';
 
 const LoginPage = () => {
   const [userType, setUserType] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const[showcredential_alert, setshowcredential_alert]= useState(false);
+  const [showcredential_alert, setshowcredential_alert]= useState(false);
   // Maneja la selección del tipo de usuario
   const handleUserType = (type) => {
     setUserType(type);
@@ -22,8 +25,6 @@ const LoginPage = () => {
     setPassword('');
     setshowcredential_alert(false);
   };
-
- 
 
   //llama funciones para obtener cookie de sesion de usuario
   const Login_alumno = async (mail, password) =>{
@@ -106,9 +107,9 @@ const LoginPage = () => {
   const renderLoginForm = () => {
     let placeholderText = '';
     if (userType === 'alumno') {
-      placeholderText = 'Mail UAI ';
+      placeholderText = 'Mail Alumno UAI';
     } else if (userType === 'administrador') {
-      placeholderText = 'Mail UAI';
+      placeholderText = 'Mail Administrador UAI';
     }
     return (
       <div>
@@ -117,10 +118,12 @@ const LoginPage = () => {
           style={{ fontSize: '10px', textAlign: 'center' }}
         >
           <ArrowBackIcon color="primary" />
-          
         </Button>
-        <h2 style={{ textAlign: 'center', fontSize: '19px', marginBottom: '10%', marginTop: '10px' }}>
-          Iniciar sesión
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <img src={logoUAI} alt="Imagen" style={{ width: '80px', height: '80px' }} />
+        </div>
+        <h2 style={{ textAlign: 'center', fontSize: '19px', marginBottom: '20px', marginTop: '20px' }}>
+          Iniciar Sesión
         </h2>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <TextField
@@ -144,7 +147,7 @@ const LoginPage = () => {
         </div>
         <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>
           <Button variant="contained" className="loginbtn" color="primary" onClick={handleLogin}>
-            Iniciar sesión
+            Iniciar Sesión
           </Button>
         </div>
         {showcredential_alert && <Alert severity="error">Credenciales de acceso inválidas</Alert>}
@@ -152,32 +155,41 @@ const LoginPage = () => {
     );
   };
   
-  
+  const containerStyle = {
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    opacity: 0.9
+    // Añade otros estilos de tu elección para posicionar y estilizar la imagen de fondo
+  };
+
   return (
-    
-    <div>
+    <div style={containerStyle}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <div style={{ width: '300px', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
-            {userType ? (
-            renderLoginForm()
-            ) : (
-            <div>
-                <h2 style = {{textAlign: 'center', fontSize: '25px', marginBottom: '30px'}}>Tipo de usuario</h2>
+          <div style={{ width: '320px', height: '500px', padding: '20px', border: '1px solid #ffffff', borderRadius: '3px', backgroundColor: '#ffffff' }}>
+              {userType ? (
+              renderLoginForm()
+              ) : (
+              <div>
+                <div style={{ textAlign: 'center', marginTop: '80px' }}>
+                  <img src={logoUAI} alt="Imagen" style={{ width: '80px', height: '80px' }} />
+                </div>
+                <h2 style = {{ textAlign: 'center', fontSize: '25px', fontFamily: 'Helvetica', fontWeight: 'bold', marginTop: '30px' }}>Pasantías Paso a Paso</h2>
+                <h3 style = {{ textAlign: 'center', fontSize: '20px', fontFamily: 'Helvetica', marginTop: '20px', marginBottom: '30px' }}>Tipo de Usuario</h3>
                 <div className="button-container">
-                  <Button variant="contained" color="primary" onClick={() => handleUserType('alumno')}>
+                  <Button variant="outlined" color="primary" startIcon={<PersonIcon />} onClick={() => handleUserType('alumno')}>
                     Alumno
                   </Button>
-                  &nbsp;&nbsp;&nbsp;
-                  <Button variant="contained" color="secondary" onClick={() => handleUserType('administrador')}>
+                  <Button variant="outlined" color="primary" endIcon={<ManageAccountsIcon />} onClick={() => handleUserType('administrador')}>
                     Administrador
                   </Button>
                 </div>
-            </div>
-            )}
-        </div>
+              </div>
+              )}
+          </div>
         </div>
     </div>
   );
 };
   
-  export default LoginPage;
+export default LoginPage;
