@@ -1,20 +1,31 @@
 import React, {useState} from 'react';
 import {Button} from 'reactstrap';
 import FuncionPaso from '../FuncionPaso/FuncionPaso';
+import Alerta from '../Alerta/Alerta.js';
 
 function Formulario({Paso, RUN}) {
   //Definición de constantes en donde se almacenará el alumno, el reglamento y si se debe o no mostrar el modal.
   const [reglamento, setReglamento] = useState({RUN_Alumno: RUN, Fecha: getCurrentDateString()});
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTipo, setAlertTipo] = useState('');
+  const [showButtons, setShowButtons] = useState(true);
+    
   const handleReglamento = () => {
-    console.log(RUN);
     Paso = Paso + 0.5;
     FuncionPaso(Paso, RUN);
+    setShowButtons(false);
+    setTimeout(() => {
+      window.location.href = '/alumno';
+    }, 3000);
+  }
+
+  const funcRechazar = () => {
     setTimeout(() => {
       window.location.href = '/alumno';
     }, 500);
   }
 
-  
   //Función tipo POST para agregar un registro al la tabla de Reglamentos del backend
   const entregarDataReglamento = async () => {
     try {
@@ -33,13 +44,17 @@ function Formulario({Paso, RUN}) {
       const data = await respuesta.json();
       
       if (data.error) {
-        alert(data.error);
+        throw new Error(data.error);
       } else {
-        alert('Reglamento aceptado!')
+        setShowAlert(true);
+        setAlertMessage('Reglamento aceptado exitosamente.');
+        setAlertTipo('success');
         handleReglamento();
       }
     } catch (error){
-      alert('ERROR: Error en la aceptación del reglamento.')
+      setShowAlert(true);
+      setAlertMessage(error.message);
+      setAlertTipo('danger');
     }
   }
 
@@ -63,7 +78,7 @@ function Formulario({Paso, RUN}) {
     const sec = new Date().getSeconds()
     return (year.toString() + '-' + convertNumberFormat(month) + '-' + convertNumberFormat(day) + ' ' +  convertNumberFormat(hours) + ':' + convertNumberFormat(min) + ':' + convertNumberFormat(sec))
   }
-  
+
   //Ejecuta todos los comandos que se deben ejecutar al momento de confirmar el reglamento
   const funcConfirmado = () => {
     //Almacenar la hora en que se aceptó
@@ -78,20 +93,27 @@ function Formulario({Paso, RUN}) {
   //Se retorna el código HTML del Formulario que recibe la información del Alumno y genera sus registros en caso de aceptar el reglamento.
   return (
     <div className="center">
-        <h1>Confirmación de reglamento</h1>
-        <div>
+      <h1>Confirmación de reglamento</h1>
+      <div>
         <embed
           src="http://localhost:4000/omega/pdf/DECRETO ACADEMICO REGLAMENTO FIC PRACTICA.pdf"
           width="800"
           height="575"
           type="application/pdf"
         />
-        
-        <div className="button-container">
-        <Button className="accept-button " onClick={() => funcConfirmado()}>Aceptar</Button>
-        <Button className="reject-button">Rechazar</Button>
+        <div>
+          {<Alerta mensaje = {alertMessage} tipo = {alertTipo} showAlert = {showAlert} setShowAlert = {setShowAlert}/>}
         </div>
-        </div>
+        {showButtons ? (
+          <div className="button-container">
+            <Button className="accept-button" onClick={() => funcConfirmado()}>Aceptar</Button>
+            <Button className="reject-button" onClick={() => funcRechazar()}>Rechazar</Button>
+          </div>
+        ) : (
+          <div></div>
+        )
+        }
+      </div>
   </div>
   );
 }

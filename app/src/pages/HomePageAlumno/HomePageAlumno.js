@@ -62,14 +62,13 @@ const HomePageAlumno = () => {
       case 1:
       return (
         <Formulario  Paso={step} RUN = {cuenta.run}/>
-  
-      );
+        );
       case 1.5:
         return (
           <div className="center">
-        <h3>Ya se aceptó el reglamento, se desbloqueará el Paso 2 cuando el administrador acepte sus requisitos</h3>
-        </div>
-      );
+            <h3>Ya se aceptó el reglamento, se desbloqueará el Paso 2 cuando el administrador acepte sus requisitos</h3>
+          </div>
+        );
       case 2:
         return (
           <FormEmpresa RUN={cuenta.run} Paso={step} />

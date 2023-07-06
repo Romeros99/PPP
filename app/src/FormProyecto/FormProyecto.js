@@ -95,8 +95,8 @@ const FormProyecto = ({RUN_Alumno}) => {
               required
             >
               <option value="">Seleccionar</option>
-              <option value="full-time">Full-Time</option>
-              <option value="part-time">Part-Time</option>
+              <option value="full-time">Full-Time (45 Horas)</option>
+              <option value="part-time">Part-Time (30 Horas)</option>
             </Input>
           </FormGroup>
           <FormGroup>

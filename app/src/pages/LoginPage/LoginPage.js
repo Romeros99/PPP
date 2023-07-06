@@ -14,6 +14,8 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showcredential_alert, setshowcredential_alert]= useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   // Maneja la selección del tipo de usuario
   const handleUserType = (type) => {
     setUserType(type);
@@ -24,6 +26,7 @@ const LoginPage = () => {
     setUsername('');
     setPassword('');
     setshowcredential_alert(false);
+    setShowAlert(false);
   };
 
   //llama funciones para obtener cookie de sesion de usuario
@@ -46,6 +49,8 @@ const LoginPage = () => {
         window.location.href = "/alumno";
       } else {
         setshowcredential_alert(true);
+        setAlertMessage('Credenciales de acceso inválidas.');
+        setShowAlert(true);
       }
 
     } catch (error) {
@@ -67,13 +72,15 @@ const LoginPage = () => {
           password: password
         })
       });
+
       const data = await response.json()
-      console.log(data.message);
+
       if (data.message==='valid_credentials') {
-        
         window.location.href = "/admin";
       } else {
         setshowcredential_alert(true);
+        setAlertMessage('Credenciales de acceso inválidas.');
+        setShowAlert(true);
       }
 
     } catch (error) {
@@ -98,7 +105,9 @@ const LoginPage = () => {
       console.log('Iniciar sesión como administrador:', username, password);
     } else {
       // Mostrar mensaje de error si no se seleccionó un tipo de usuario o se dejó algún campo vacío
-      alert('Completa todos los campos');
+      setAlertMessage('Por favor ingresar mail y contraseña.');
+      setShowAlert(true);
+      //alert('Completa todos los campos');
     }
   };
 
@@ -150,7 +159,7 @@ const LoginPage = () => {
             Iniciar Sesión
           </Button>
         </div>
-        {showcredential_alert && <Alert severity="error">Credenciales de acceso inválidas</Alert>}
+        {showAlert && <Alert severity="error">{alertMessage}</Alert>}
       </div>
     );
   };
@@ -166,12 +175,12 @@ const LoginPage = () => {
   return (
     <div style={containerStyle}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <div style={{ width: '320px', height: '500px', padding: '20px', border: '1px solid #ffffff', borderRadius: '3px', backgroundColor: '#ffffff' }}>
+          <div style={{ width: '320px', height: '520px', padding: '20px', border: '1px solid #ffffff', borderRadius: '3px', backgroundColor: '#ffffff' }}>
               {userType ? (
               renderLoginForm()
               ) : (
               <div>
-                <div style={{ textAlign: 'center', marginTop: '80px' }}>
+                <div style={{ textAlign: 'center', marginTop: '110px' }}>
                   <img src={logoUAI} alt="Imagen" style={{ width: '80px', height: '80px' }} />
                 </div>
                 <h2 style = {{ textAlign: 'center', fontSize: '25px', fontFamily: 'Helvetica', fontWeight: 'bold', marginTop: '30px' }}>Pasantías Paso a Paso</h2>

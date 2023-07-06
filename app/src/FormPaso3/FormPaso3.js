@@ -7,7 +7,6 @@ import mailfunctions from './mailfunctions'; //se traen las funciones con html d
 
 const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
     const [showRechazo, setShowRechazo] = useState(false);
-    const [visible, setVisible] = useState(false);
     //Almacena si se realizó o no algún cambio en los detalles de la empresa o del supervisor
     const [cambiosRealizados, setCambiosRealizados] = useState(false);
     const [respuestaSupervisor, setRespuestaSupervisor] = useState({ID_Respuesta: 0, RUN_Alumno: '', Tramitado: 0, Respuesta: null});
@@ -19,7 +18,6 @@ const FormPaso3 = ({setShowModal,showModal, datos, setDatos, mailAlumno}) => {
     const [showAlert2, setShowAlert2] = useState(false);
     const [alertMessage2, setAlertMessage2] = useState('Acción realizada exitosamente.');
     const [alertTipo2, setAlertTipo2] = useState('success');
-
 
     const crearRespuestaSupervisor = async () => {
         try {
